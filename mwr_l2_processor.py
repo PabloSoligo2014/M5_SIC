@@ -172,9 +172,7 @@ class Bean:
         self.lat = value
     def addLon(self, value):
         self.lon = value
-        
-     
-    
+            
     def getLat(self):
         return self.lat                
     
@@ -262,21 +260,94 @@ class BandBeanList(list):
             raise Exception('Error al asignar elemento a lista de banda distinta')
         else:
             super(BandBeanList, self).append(obj)
+    
+    
+    """    
+    def getSicAsList(self):
+        result = []
+        for s in self:
+            result.append(self.getSic())
+            
+        return result
+    """
+
+        
+        
             
 class MultiBandBeanDict(dict):
-    def saveToFile(self, filename):
-       
-        #mfile = h5py.File("./output/"+filename,'w')
-        # Open "dset" dataset under the root group.
+    pass
+    
+    
+
+"""
+    Clase para administrar el guardado, 
+    Idealmente las mismas listas podrian tener un save to file, 
+    pero finalmente los datos agrupados quedaron en listas distintas
+    a los datos por beans, por tanto se necesito una clase que 
+    concentre todo
+"""
+    
+class hd5fileManager():
+    
+    _filename = ""
+    _measurelist = None
+    _multiBandBeanDict = None
+    
+    def __init__(self, filename, measurelist, multiBandBeanDict):
+        self._filename = filename
+        self._measurelist = measurelist
+        self._multiBandBeanDict = multiBandBeanDict        
         
+    def save(self):
+
+        f = h5py.File(self._filename, "w")
+        
+        grp_geo_retrieval= f.create_group("MWR Geophysical Retrieval Data")
+        grp_geo_retrieval.create_dataset("sea_ice_concentration",data=measurelist.getSicsAsArray())
+        Continuar aca!!
         for b in range(0, 8):
             #obtengo el bandbeanlist para la banda
             bbl = self["Band"+str(b)]
             for x in bbl:
-                MultibandBean(x).
+                x.getSic()        
+        
+        
+        """
+        grp_geo_data= f.create_group("Geolocation	Data")
+        grp_geo_data.create_dataset("sea_ice_concentration_gg",data=index_gg)
+   
+        grp_inter_data= f.create_group("Intermediate	Data")
+        grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
+        grp_inter_data.create_dataset("k_h_surface_type",data=surface_type)
+        grp_inter_data.create_dataset("k_h_antenna_temperature",data=array_k_h_tb)
+        grp_inter_data.create_dataset("ka_h_geodedic_grid_index",data=index_gg)
+        #grp_inter_data.create_dataset("ka_h_surface_type",data=ka_h_surface_type)
+        grp_inter_data.create_dataset("ka_h_antenna_temperature",data=array_ka_h_tb)
+        grp_inter_data.create_dataset("ka_v_geodedic_grid_index",data=index_gg)
+        #grp_inter_data.create_dataset("ka_v_surface_type",data=ka_v_surface_type)
+        grp_inter_data.create_dataset("ka_v_antenna_temperature",data=array_ka_v_tb)
+        ##recorro el dicc dp,dg para guardarlo por beam        
+            
+         for beam in dp:   
+            b=str(beam)
+            deltas_g="delta_g_beam_"+b
+            deltas_p="delta_p_beam_"+b
+            grp_inter_data.create_dataset(deltas_g,data=dg[beam])
+            grp_inter_data.create_dataset(deltas_p,data=dp[beam])
+        """
+        f.flush()
+        f.close()
+            
+        """    
+        
+                
                         
             
             print "Tamano del bandbeanlist", len(bbl)
+            
+            
+            
+           
         
         #dataset = mfile.create_dataset("dset",(1, len(sics)), )
         
@@ -291,7 +362,10 @@ class MultiBandBeanDict(dict):
     
         #mfile.flush()
         #mfile.close()
+        """
   
+    
+    
        
 #junta, agrupa por beans para la grafica final
 class MeasureList(list):
@@ -321,6 +395,14 @@ class MeasureList(list):
         #si ya existe promedio y agrupo
         o = Measure(obj.getLat(), obj.getLon(), obj.getGG(), obj.getSic())
         self.append(o)
+        
+        
+    def getSicsAsArray(self):
+        result = []
+        for measure in self: 
+            result.append(measure.getSic())
+            
+        return result
             
     def draw(self):
         #No es muy ortodoxo dibujar dentro de la clase
