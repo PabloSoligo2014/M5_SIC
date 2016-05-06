@@ -65,19 +65,13 @@ class MultibandBean:
         return (self.ka_v_bean.getTbs()) - (self.ka_h_bean.getTbs())
     
     def getAG(self):
-        
         #print "ka_h/k_h tbs: ", self.ka_h_bean.getTbs(), self.k_h_bean.getTbs() 
-                
         return (self.ka_h_bean.getTbs()) - (self.k_h_bean.getTbs())
         
     def getSic(self):
         numerador = (self.getAG()-self.getOpenWaterG()) - ((self.getAP()-self.getOpenWaterP()) * self.getAlpha())
         denominador = (self.getMultiYearIceG()-self.getOpenWaterG())-((self.getMultiYearIceP()-self.getOpenWaterP())*self.getAlpha())
-
          
-        #print "Numerador, Denominador, Cornet", numerador, denominador, self.cornet    
-        ##return numerador/denominador
-        #ponemos valor absoluto aunque no se bien porque es necesario
         val = numerador/denominador
         if(val<0):
             return 0
@@ -219,23 +213,17 @@ class Measure:
         return self.lat/self.meds
     def getLon(self):
         return self.lon/self.meds
-   
     def getGG(self):
         return self.gg
     def getSic(self):
         return self.sics/(self.meds)
-
-        
     def addValue(self, mbBean):
         self.sics = self.sics + mbBean.getSic() 
         self.lat = self.lat + mbBean.getLat() 
         self.lon = self.lon + mbBean.getLon()
         self.meds = self.meds + 1
-
-        
     def __eq__(self, other):
         return type(self) == type(other) and self.getGG() == other.getGG()
-        
     def __hash__(self):
         return 1
         
@@ -261,17 +249,37 @@ class BandBeanList(list):
         else:
             super(BandBeanList, self).append(obj)
     
-    
-    """    
     def getSicAsList(self):
         result = []
         for s in self:
             result.append(self.getSic())
-            
         return result
-    """
 
+    def getGGAsArray(self):
+        result = []
+        for s in self:
+            result.append(self.getSic())
+        return result
         
+    def getSurfaceAsArray(self):
+        result = []
+        for s in self:
+            result.append(self.getSurface())
+        return result
+        
+    def getBandAsArray(self):
+        result = []
+        for s in self:
+            result.append(self.getBand())
+        return result
+        
+    def getTbsAsArray(self):
+        result = []
+        for s in self:
+            result.append(self.getTbs())
+        return result
+
+
         
             
 class MultiBandBeanDict(dict):
@@ -279,19 +287,20 @@ class MultiBandBeanDict(dict):
     
     
 
-"""
-    Clase para administrar el guardado, 
-    Idealmente las mismas listas podrian tener un save to file, 
-    pero finalmente los datos agrupados quedaron en listas distintas
-    a los datos por beans, por tanto se necesito una clase que 
-    concentre todo
-"""
+    """
+        Clase para administrar el guardado, 
+        Idealmente las mismas listas podrian tener un save to file, 
+        pero finalmente los datos agrupados quedaron en listas distintas
+        a los datos por beans, por tanto se necesito una clase que 
+        concentre todo
+    """
     
 class hd5fileManager():
     
     _filename = ""
     _measurelist = None
     _multiBandBeanDict = None
+    
     
     def __init__(self, filename, measurelist, multiBandBeanDict):
         self._filename = filename
@@ -302,9 +311,26 @@ class hd5fileManager():
 
         f = h5py.File(self._filename, "w")
         
-        grp_geo_retrieval= f.create_group("MWR Geophysical Retrieval Data")
-        grp_geo_retrieval.create_dataset("sea_ice_concentration",data=measurelist.getSicsAsArray())
-        Continuar aca!!
+        grp_geo_retrieval = f.create_group("MWR Geophysical Retrieval Data")
+        grp_geo_retrieval.create_dataset("sea_ice_concentration",data=self._measurelist.getSicsAsArray())
+        
+        grp_geo_data= f.create_group("Geolocation	Data")
+        grp_geo_data.create_dataset("sea_ice_concentration_gg",data=self._measurelist.getGGAsArray())
+   
+        """
+   
+        grp_inter_data= f.create_group("Intermediate	Data")
+        grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
+        grp_inter_data.create_dataset("k_h_surface_type",data=surface_type)
+        grp_inter_data.create_dataset("k_h_antenna_temperature",data=array_k_h_tb)
+        grp_inter_data.create_dataset("ka_h_geodedic_grid_index",data=index_gg)
+        grp_inter_data.create_dataset("ka_h_antenna_temperature",data=array_ka_h_tb)
+        grp_inter_data.create_dataset("ka_v_geodedic_grid_index",data=index_gg)
+        grp_inter_data.create_dataset("ka_v_antenna_temperature",data=array_ka_v_tb)
+        ##recorro el dicc dp,dg para guardarlo por beam        
+        
+        """
+        """        
         for b in range(0, 8):
             #obtengo el bandbeanlist para la banda
             bbl = self["Band"+str(b)]
@@ -312,38 +338,25 @@ class hd5fileManager():
                 x.getSic()        
         
         
-        """
-        grp_geo_data= f.create_group("Geolocation	Data")
-        grp_geo_data.create_dataset("sea_ice_concentration_gg",data=index_gg)
-   
-        grp_inter_data= f.create_group("Intermediate	Data")
-        grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
-        grp_inter_data.create_dataset("k_h_surface_type",data=surface_type)
-        grp_inter_data.create_dataset("k_h_antenna_temperature",data=array_k_h_tb)
-        grp_inter_data.create_dataset("ka_h_geodedic_grid_index",data=index_gg)
-        #grp_inter_data.create_dataset("ka_h_surface_type",data=ka_h_surface_type)
-        grp_inter_data.create_dataset("ka_h_antenna_temperature",data=array_ka_h_tb)
-        grp_inter_data.create_dataset("ka_v_geodedic_grid_index",data=index_gg)
-        #grp_inter_data.create_dataset("ka_v_surface_type",data=ka_v_surface_type)
-        grp_inter_data.create_dataset("ka_v_antenna_temperature",data=array_ka_v_tb)
-        ##recorro el dicc dp,dg para guardarlo por beam        
+        
             
-         for beam in dp:   
+        for beam in dp:   
             b=str(beam)
             deltas_g="delta_g_beam_"+b
             deltas_p="delta_p_beam_"+b
             grp_inter_data.create_dataset(deltas_g,data=dg[beam])
             grp_inter_data.create_dataset(deltas_p,data=dp[beam])
         """
+        
         f.flush()
         f.close()
             
-        """    
+            
         
                 
-                        
+        """
             
-            print "Tamano del bandbeanlist", len(bbl)
+        print "Tamano del bandbeanlist", len(bbl)
             
             
             
@@ -397,12 +410,7 @@ class MeasureList(list):
         self.append(o)
         
         
-    def getSicsAsArray(self):
-        result = []
-        for measure in self: 
-            result.append(measure.getSic())
-            
-        return result
+
             
     def draw(self):
         #No es muy ortodoxo dibujar dentro de la clase
@@ -844,11 +852,6 @@ class passfile:
         self.simpleFileName = os.path.basename(self.uncompressedFileName)
         tam = len(dic["k_h_geodedic_grid_index"])
             #print tam
-        
-        
-        
-
-
             
         self.beans_k_h      = promediados(CONST_K_H_BAND, dic, "k_h_latitude", "k_h_longitude", "ka_h_surface_type", "k_h_antenna_temperature", "k_h_geodedic_grid_index", tam, surface_filter)    
         self.beans_ka_h     = promediados(CONST_KA_H_BAND, dic,"ka_h_latitude", "ka_h_longitude", "ka_h_surface_type", "ka_h_antenna_temperature", "ka_h_geodedic_grid_index", tam, surface_filter)    
@@ -1054,16 +1057,15 @@ if __name__ == "__main__":
     pf = passfile(l1b_file, [1])
     mlist, beandic = processPassFile(pf)
     
-    beandic.saveToFile("test.h5")
-    
-    
-    
+    #beandic.saveToFile("test.h5")
     #mlist.drawHk()
-    
-    
     #SIC, lat, lon, gg, dp, dg, Surface_type 
     
-        
+    h5f = hd5fileManager("testx.h5" ,mlist, beandic)
+    
+    
+    
+    h5f.save()
     
     print "Clean filename->",pf.getCleanFileName()
     #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
