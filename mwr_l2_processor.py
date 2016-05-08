@@ -284,8 +284,7 @@ class BandBeanList(list):
             
 class MultiBandBeanDict(dict):
     pass
-    
-    
+            
 
     """
         Clase para administrar el guardado, 
@@ -317,20 +316,26 @@ class hd5fileManager():
         grp_geo_data= f.create_group("Geolocation	Data")
         grp_geo_data.create_dataset("sea_ice_concentration_gg",data=self._measurelist.getGGAsArray())
    
-        """
-   
         grp_inter_data= f.create_group("Intermediate	Data")
-        grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
+        
+        
+        
+        ds_k_h_geodedic_grid_index = grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
+       
+        
+            
+        
+        
+        ##recorro el dicc dp,dg para guardarlo por beam        
+        
+        """
+        
         grp_inter_data.create_dataset("k_h_surface_type",data=surface_type)
         grp_inter_data.create_dataset("k_h_antenna_temperature",data=array_k_h_tb)
         grp_inter_data.create_dataset("ka_h_geodedic_grid_index",data=index_gg)
         grp_inter_data.create_dataset("ka_h_antenna_temperature",data=array_ka_h_tb)
         grp_inter_data.create_dataset("ka_v_geodedic_grid_index",data=index_gg)
         grp_inter_data.create_dataset("ka_v_antenna_temperature",data=array_ka_v_tb)
-        ##recorro el dicc dp,dg para guardarlo por beam        
-        
-        """
-        """        
         for b in range(0, 8):
             #obtengo el bandbeanlist para la banda
             bbl = self["Band"+str(b)]
