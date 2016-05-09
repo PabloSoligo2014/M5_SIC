@@ -37,7 +37,7 @@ class MeasureList(list):
     #Agrega todo sin filtrar, solo para propositos de test
     def normal_add(self, obj):
         #si ya existe promedio y agrupo
-        print "Mi SIC->", obj.getSic()
+        #print "Mi SIC->", obj.getSic()
         o = Measure(obj.getLat(), obj.getLon(), obj.getGG(), obj.getSic())
         self.append(o)
         

@@ -51,9 +51,9 @@ class MultibandBean:
         
     def getSic(self):
         
-        print "Cornet->", self.cornet        
-        print "numerador", self.getAG(),self.getOpenWaterG(),self.getAP(),self.getOpenWaterP(),self.getAlpha()
-        print "denominador", self.getMultiYearIceG(),self.getOpenWaterG(),self.getMultiYearIceP(),self.getOpenWaterP(),self.getAlpha()
+        #print "Cornet->", self.cornet        
+        #print "numerador", self.getAG(),self.getOpenWaterG(),self.getAP(),self.getOpenWaterP(),self.getAlpha()
+        #print "denominador", self.getMultiYearIceG(),self.getOpenWaterG(),self.getMultiYearIceP(),self.getOpenWaterP(),self.getAlpha()
         
         numerador = (self.getAG()-self.getOpenWaterG()) - ((self.getAP()-self.getOpenWaterP()) * self.getAlpha())
         denominador = (self.getMultiYearIceG()-self.getOpenWaterG())-((self.getMultiYearIceP()-self.getOpenWaterP())*self.getAlpha())

@@ -28,7 +28,7 @@ class Measure:
     def getSic(self):
         return self.sics/(self.meds)
     def addValue(self, mbBean):
-        print "Sic agregado->",  mbBean.getSic()  
+        #print "Sic agregado->",  mbBean.getSic()  
         self.sics = self.sics + mbBean.getSic() 
         self.lat = self.lat + mbBean.getLat() 
         self.lon = self.lon + mbBean.getLon()

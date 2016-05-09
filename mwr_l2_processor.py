@@ -9,6 +9,17 @@ import tarfile
 
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
+
+from Bean import Bean
+from hd5fileManager import hd5fileManager
+#import Measure
+from MeasureList import MeasureList
+
+
+from MultiBandBeanDict import MultiBandBeanDict
+
+from BandBeanList import BandBeanList
+from MultibandBean import MultibandBean
 #import gdal
 
 #import numpy as np
@@ -18,571 +29,16 @@ import matplotlib.pyplot as plt
 #Calibrar: 1 sea / 5 posible hielo
 #L2 1,5 3
 
+#Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
+
 
 CONST_K_H_BAND  =  "k_h"
 CONST_KA_H_BAND =  "ka_h" 
 CONST_KA_V_BAND =  "ka_v" 
-    
-    
-class MultibandBean:
-    k_h_bean    = None
-    ka_h_bean   = None
-    ka_v_bean   = None
-    cornet      = 0
-    gg          = 0
-    
-    def __init__(self, Ak_h_bean, Aka_h_bean, Aka_v_bean, cornet, gg):
-        self.k_h_bean     = Ak_h_bean
-        self.ka_h_bean    = Aka_h_bean
-        self.ka_v_bean    = Aka_v_bean
-        self.cornet       = cornet
-        self.gg           = gg
-        
-        #MATIAS: Porque no puedo hacer un len de un atributo?"
-        #Cualquier lenguaje permitiria hacerlo
-        #len(self.k_h_bean)
-
-    def getGG(self):
-        return self.gg
-
-    def getK_h_bean(self):
-        return self.k_h_bean
-    def getKa_h_bean(self):
-        return self.ka_h_bean
-    def getKa_v_bean(self):
-        return self.k_v_bean
-        
-        
-    def getLat(self):
-        return (self.k_h_bean.getLat()+self.ka_h_bean.getLat()+self.ka_v_bean.getLat())/3
-    
-    def getLon(self):
-        return (self.k_h_bean.getLon()+self.ka_h_bean.getLon()+self.ka_v_bean.getLon())/3
-        
-    def getAP(self):
-        #print "ka_v/ka_h tbs: ", self.ka_v_bean.getTbs(), self.ka_h_bean.getTbs() 
-        
-        return (self.ka_v_bean.getTbs()) - (self.ka_h_bean.getTbs())
-    
-    def getAG(self):
-        #print "ka_h/k_h tbs: ", self.ka_h_bean.getTbs(), self.k_h_bean.getTbs() 
-        return (self.ka_h_bean.getTbs()) - (self.k_h_bean.getTbs())
-        
-    def getSic(self):
-        numerador = (self.getAG()-self.getOpenWaterG()) - ((self.getAP()-self.getOpenWaterP()) * self.getAlpha())
-        denominador = (self.getMultiYearIceG()-self.getOpenWaterG())-((self.getMultiYearIceP()-self.getOpenWaterP())*self.getAlpha())
-         
-        val = numerador/denominador
-        if(val<0):
-            return 0
-        elif(val>1):
-            return 1
-        else:
-            return val
-            
-        
-    def getAlpha(self):
-        return (self.getFirstYearIceG()-self.getMultiYearIceG())/(self.getFirstYearIceP()-self.getMultiYearIceP())
-    
-    def getOpenWaterG(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return 12.36
-        else:
-            return 13.87
-    
-    def getFirstYearIceG(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return -5.66
-        else:
-            return -4.40
-    
-    def getMultiYearIceG(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return -10.24
-        else:
-            return -11.20
-            
-    def getOpenWaterP(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return 62.73
-        else:
-            return 73.31
-    
-    def getFirstYearIceP(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return 27.35
-        else:
-            return 21.60
-    
-    def getMultiYearIceP(self):
-        if (self.cornet+1 % 2 == 0):
-            #es par
-            return 25.04
-        else:
-            return 20.51
-            
-    def getCornet(self):
-        return self.cornet
-        
-
-
-class Bean:
-    
-    #No pueden ser privados?
-    gg_index  = 0
-    lat       = 0.0
-    lon       = 0.0
-    tbs       = 0.0
-    band      = "No det"
-    bean      = 0
-    surface   = 0    
-    
-    def __init__(self):
-              
-        self.gg_index  = 0
-        self.lat       = 0.0
-        self.lon       = 0.0
-        self.tbs       = 0
-        self.band      = "No det"
-        self.bean      = 0
-        self.surface   = 0
-        
-    def getTbs(self):
-        #MATIAS Como es que python no permite acceder a mas de un nivel de profundidad
-        #Java, C#, Delphi, C++, VB permiten
-        #print "getTbs: ", self.__tbs         
-        return self.tbs
-        
-    def setTbs(self, value):
-        #print "set tbs", value
-        self.tbs = value    
-        
-    def addLat(self, value):
-        self.lat = value
-    def addLon(self, value):
-        self.lon = value
-            
-    def getLat(self):
-        return self.lat                
-    
-    def getLon(self):
-        return self.lon
-        
-    def getBand(self):
-        return self.band 
-        
-    def getSurface(self):
-        return self.surface
-        
-    def getGG(self):
-        return self.gg_index
-        
-    def __eq__(self, other):
-        return self.gg_index == other.gg_index
-        
-    def __hash__(self):
-        return 1
-        
-    def __cmp__(self,other):
-        return cmp(self.getGG(),other.getGG())
-        
-        
-
-        
-    
-#Esta clase agrupa todos los beans en uno solo sic
-class Measure:
-    lat=0.0
-    lon=0.0
-    gg = 0  
-    meds = 0
-    sics = 0
-    
-    def __init__(self, lat, lon, gg, sic):
-        self.lat = lat
-        self.lon = lon
-        self.gg = gg
-        self.sics = sic
-        self.meds = 1       
-    def getLat(self):
-        return self.lat/self.meds
-    def getLon(self):
-        return self.lon/self.meds
-    def getGG(self):
-        return self.gg
-    def getSic(self):
-        return self.sics/(self.meds)
-    def addValue(self, mbBean):
-        self.sics = self.sics + mbBean.getSic() 
-        self.lat = self.lat + mbBean.getLat() 
-        self.lon = self.lon + mbBean.getLon()
-        self.meds = self.meds + 1
-    def __eq__(self, other):
-        return type(self) == type(other) and self.getGG() == other.getGG()
-    def __hash__(self):
-        return 1
-        
-    
- 
-
-   
-        
-class BandBeanList(list):
-    
-    _band = -1
-    def __init__(self, band, *args):
-        list.__init__(self, *args)
-        self._band = band
-    
-    def getBand(self):
-        return self._band
-        
-    def add(self, obj):
-        
-        if(obj.getCornet()!=self.getBand()):
-            raise Exception('Error al asignar elemento a lista de banda distinta')
-        else:
-            super(BandBeanList, self).append(obj)
-    
-    def getSicAsList(self):
-        result = []
-        for s in self:
-            result.append(self.getSic())
-        return result
-
-    def getGGAsArray(self):
-        result = []
-        for s in self:
-            result.append(self.getSic())
-        return result
-        
-    def getSurfaceAsArray(self):
-        result = []
-        for s in self:
-            result.append(self.getSurface())
-        return result
-        
-    def getBandAsArray(self):
-        result = []
-        for s in self:
-            result.append(self.getBand())
-        return result
-        
-    def getTbsAsArray(self):
-        result = []
-        for s in self:
-            result.append(self.getTbs())
-        return result
-
-
-        
-            
-class MultiBandBeanDict(dict):
-    pass
-            
-
-    """
-        Clase para administrar el guardado, 
-        Idealmente las mismas listas podrian tener un save to file, 
-        pero finalmente los datos agrupados quedaron en listas distintas
-        a los datos por beans, por tanto se necesito una clase que 
-        concentre todo
-    """
-    
-class hd5fileManager():
-    
-    _filename = ""
-    _measurelist = None
-    _multiBandBeanDict = None
-    
-    
-    def __init__(self, filename, measurelist, multiBandBeanDict):
-        self._filename = filename
-        self._measurelist = measurelist
-        self._multiBandBeanDict = multiBandBeanDict        
-        
-    def save(self):
-
-        f = h5py.File(self._filename, "w")
-        
-        grp_geo_retrieval = f.create_group("MWR Geophysical Retrieval Data")
-        grp_geo_retrieval.create_dataset("sea_ice_concentration",data=self._measurelist.getSicsAsArray())
-        
-        grp_geo_data= f.create_group("Geolocation	Data")
-        grp_geo_data.create_dataset("sea_ice_concentration_gg",data=self._measurelist.getGGAsArray())
-   
-        grp_inter_data= f.create_group("Intermediate	Data")
-        
-        
-        
-        ds_k_h_geodedic_grid_index = grp_inter_data.create_dataset("k_h_geodedic_grid_index",data=index_gg)
-       
-        
-            
-        
-        
-        ##recorro el dicc dp,dg para guardarlo por beam        
-        
-        """
-        
-        grp_inter_data.create_dataset("k_h_surface_type",data=surface_type)
-        grp_inter_data.create_dataset("k_h_antenna_temperature",data=array_k_h_tb)
-        grp_inter_data.create_dataset("ka_h_geodedic_grid_index",data=index_gg)
-        grp_inter_data.create_dataset("ka_h_antenna_temperature",data=array_ka_h_tb)
-        grp_inter_data.create_dataset("ka_v_geodedic_grid_index",data=index_gg)
-        grp_inter_data.create_dataset("ka_v_antenna_temperature",data=array_ka_v_tb)
-        for b in range(0, 8):
-            #obtengo el bandbeanlist para la banda
-            bbl = self["Band"+str(b)]
-            for x in bbl:
-                x.getSic()        
-        
-        
-        
-            
-        for beam in dp:   
-            b=str(beam)
-            deltas_g="delta_g_beam_"+b
-            deltas_p="delta_p_beam_"+b
-            grp_inter_data.create_dataset(deltas_g,data=dg[beam])
-            grp_inter_data.create_dataset(deltas_p,data=dp[beam])
-        """
-        
-        f.flush()
-        f.close()
-            
-            
-        
-                
-        """
-            
-        print "Tamano del bandbeanlist", len(bbl)
-            
-            
-            
-           
-        
-        #dataset = mfile.create_dataset("dset",(1, len(sics)), )
-        
-        #dataset = mfile.create_dataset("dset",data=npsics)
-        
-        
-        #print "Dataset dataspace is", dataset.shape
-        #print "Dataset Numpy datatype is", dataset.dtype
-        #print "Dataset name is", dataset.name
-        #print "Dataset is a member of the group", dataset.parent
-        #print "Dataset was created in the file", dataset.file    
-    
-        #mfile.flush()
-        #mfile.close()
-        """
   
     
     
        
-#junta, agrupa por beans para la grafica final
-class MeasureList(list):
-    
-    def __init__(self, *args):
-        list.__init__(self, *args)
-        
-    
-    def unique_add(self, obj):
-        #si ya existe promedio y agrupo
-        finded = False
-        for o in self:
-            if (o.getGG()==obj.getGG()):
-                #ya existe un elemento del mismo cornet para el mismo gg
-                o.addValue(obj) 
-                
-                #print "Encontrado->", o.getGG(), obj.getGG(), o.getLat(), obj.getLat(), o.getLon(), obj.getLonx()
-                finded = True
-                break;
-        
-        if not finded:
-            o = Measure(obj.getLat(), obj.getLon(), obj.getGG(), obj.getSic())
-            self.append(o)
-            
-    #Agrega todo sin filtrar, solo para propositos de test
-    def normal_add(self, obj):
-        #si ya existe promedio y agrupo
-        o = Measure(obj.getLat(), obj.getLon(), obj.getGG(), obj.getSic())
-        self.append(o)
-        
-        
-
-            
-    def draw(self):
-        #No es muy ortodoxo dibujar dentro de la clase
-        my_map = Basemap(projection='spstere',boundinglat=-50,lon_0=270,resolution='h', round=True)    
-        my_map.drawcoastlines()
-        my_map.drawcountries()
-        my_map.fillcontinents(color='coral')
-        my_map.drawmapboundary()
-    
-        for measure in self:
-            x,y = my_map(measure.getLon(), measure.getLat())
-            
-            color = 'go'    
-            #print "color->", measure.getSic()        
-            if measure.getSic()>0 and measure.getSic()<=0.2:
-                color = 'go'    
-            elif measure.getSic()>0.2 and measure.getSic()<=0.5:
-                color = 'yo'    
-            else:
-                color = 'ro'    
-    
-            my_map.plot(y, x, color, markersize=12)
-
-        my_map.drawmeridians(np.arange(0, 360, 30))
-        my_map.drawparallels(np.arange(-90, 90, 30))
-        #m.hexbin(x1,y1, C=sic[beam],gridsize=len(sic[beam]),cmap=plt.cm.jet)
-    
-    
-        plt.gcf().set_size_inches(18,10)
-        plt.show()    
-        
-    def drawHk(self, filename="nodet"):
-   
-       #    print sic
-       # setup south polar stereographic basemap.
-       if (len(self)!=0):
-            m = Basemap(projection='spstere',boundinglat=-50,lon_0=180,resolution='h', round=True)
-        
-        
-            lat = []
-            lng = []
-            sic = []
-            
-            for s in self:
-                lng.append(s.getLon())
-                lat.append(s.getLat())
-                sic.append(s.getSic())
-            
-        
-            lng = np.array(lng)
-            lat = np.array(lat)
-            sic = np.array(sic)
-            plt.figure()
-       
-            x1,y1= m(lng, lat)
-       
-            print "x, y, sic", x1, y1, sic
-            m.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
-    
-       
-            m.drawcoastlines()
-            m.fillcontinents(lake_color='white')
-            # draw parallels and meridians.
-            m.drawparallels(np.arange(-80.,81.,20.))
-            m.drawmeridians(np.arange(-180.,181.,20.))
-            m.drawmapboundary(fill_color='white')
-    
-        
-            m.colorbar(location="right",label="SIC") # draw colorbar
-            plt.title("Sea Ice Concentration - South Pole")
-            fig = plt.gcf()
-            plt.show()
-            f_name = "./img/"+filename + "_.png"
-            fig.savefig(f_name)
-            plt.close()
-            
-            # Delete auxiliar variables.
-            del m
-            del lng    
-            del lat    
-            del sic    
-            del x1
-            del y1
-            
-            return f_name
-            
-    def drawHkPoles(self, filename="nodet"):
-   
-       #    print sic
-       # setup south polar stereographic basemap.
-       if (len(self)!=0):
-            ms = Basemap(projection='spstere',boundinglat=-50,lon_0=180,resolution='h', round=True)
-            mn = Basemap(projection='npstere',boundinglat=50,lon_0=180,resolution='h', round=True)
-        
-        
-            lat = []
-            lng = []
-            sic = []
-            
-            for s in self:
-                lng.append(s.getLon())
-                lat.append(s.getLat())
-                sic.append(s.getSic())
-            
-        
-            lng = np.array(lng)
-            lat = np.array(lat)
-            sic = np.array(sic)
-            
-            plt.figure()
-       
-            x1,y1= ms(lng, lat)
-            ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
-            
-            ms.drawcoastlines()
-            ms.fillcontinents(lake_color='white')
-            ms.drawparallels(np.arange(-80.,81.,20.))
-            ms.drawmeridians(np.arange(-180.,181.,20.))
-            ms.drawmapboundary(fill_color='white')
-            ms.colorbar(location="right",label="SIC") # draw colorbar            
-            
-            plt.title("Sea Ice south Concentration")
-            fig = plt.gcf()
-            plt.show()
-            f_name = "./img/"+filename + "S.png"
-            fig.savefig(f_name)
-            
-            ##Finalizado el ploteo del sur
-            plt.close()
-            
-            
-            plt.figure()
-            x1,y1= mn(lng, lat)
-            mn.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
-            
-            mn.drawcoastlines()
-            mn.fillcontinents(lake_color='white')
-            # draw parallels and meridians.
-            mn.drawparallels(np.arange(-80.,81.,20.))
-            mn.drawmeridians(np.arange(-180.,181.,20.))
-            mn.drawmapboundary(fill_color='white')
-    
-            mn.colorbar(location="right",label="SIC") # draw colorbar
-                
-            plt.title("Sea Ice north Concentration")
-            fig = plt.gcf()
-            plt.show()
-            f_name = "./img/"+filename + "N.png"
-            fig.savefig(f_name)
-
-            
-            
-            
-            
-
-            plt.close()
-            
-            # Delete auxiliar variables.
-            del ms
-            del mn
-            del lng    
-            del lat    
-            del sic    
-            del x1
-            del y1
-            
-            return f_name
         
         
 
@@ -1005,15 +461,15 @@ def processPassFile(pf):
             #Creo un bean multibanda y lo meto en un lista que solo permite un gg
             bandbeans.add(mb)                        
             measureListB.normal_add(mb)
-        
-        beandic["Band"+str(x)] = bandbeans
+            #measureListB.unique_add(mb)
+        beandic["Bean"+str(x)] = bandbeans
         
 
-    print "Tamano de measure list->", len(measureListB)
+    #print "Tamano de measure list->", len(measureListB)
      
 
     # Open an existing file using default properties.
-
+    """
     l1fn = pf.getSimpleFileName()
     l2fn = l1fn.replace("L1B", "L2B")
     print "simpleFileName", l2fn
@@ -1038,7 +494,7 @@ def processPassFile(pf):
 
     mfile.flush()
     mfile.close()
-    
+    """
     
     #return measureListA
     return measureListB, beandic
@@ -1047,45 +503,101 @@ def processPassFile(pf):
 if __name__ == "__main__":
 
     
-        
+    #EO_20130430_190916_CUSS_SACD_MWR_L1B_SCI_099_000_004.tar.gz EO_20130430_173128_CUSS_SACD_MWR_L1B_SCI_003_000_004.tar.gz EO_20130424_144718_CUSS_SACD_MWR_L1B_SCI_015_000_004.tar.gz
     
     l1b_file = sys.argv[1]   
-    #l1b_file = mfile
-    print "procesando...", l1b_file
-    print l1b_file
-    
-    #clear = lambda: os.system('cls')
-    #clear()   
-    
-    #os.system("clear")
-    
-    pf = passfile(l1b_file, [1])
-    mlist, beandic = processPassFile(pf)
-    
-    #beandic.saveToFile("test.h5")
-    #mlist.drawHk()
-    #SIC, lat, lon, gg, dp, dg, Surface_type 
-    
-    h5f = hd5fileManager("testx.h5" ,mlist, beandic)
     
     
+    h5fList = []
     
-    h5f.save()
+    for fi in range(1, len(sys.argv)):
+        #l1b_file = mfile
+        l1b_file = sys.argv[fi]   
+        print "procesando...", l1b_file
+        print l1b_file
+        
+        #clear = lambda: os.system('cls')
+        #clear()   
+        
+        #os.system("clear")
+        
+        
+        #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
+        pf = passfile(l1b_file, [1])
+        mlist, beandic = processPassFile(pf)
+        
+        
+        
+        #beandic.saveToFile("test.h5")
+        #mlist.drawHk()
+        #SIC, lat, lon, gg, dp, dg, Surface_type 
+     
+        l1fn = pf.getSimpleFileName()
+        l2fn = l1fn.replace("L1B", "L2B")
+        
+        
+        
+        h5f = hd5fileManager("./output/"+l2fn ,mlist, beandic)
     
-    print "Clean filename->",pf.getCleanFileName()
-    #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
+        #h5f.getMeasureList().drawHkSPole()
+        #h5f.getMeasureList().drawHkNPole()
+        #h5f.getMeasureList().drawNPole()
+        h5fList.append(h5f)
+        #h5f.save()
+        
+        print "Clean filename->",pf.getCleanFileName()
+        #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
+    
+    m = Basemap(projection='npstere',boundinglat=50,lon_0=270,resolution='h', round=True)    
+    m.drawcoastlines()
+    m.drawcountries()
+    m.fillcontinents(color='coral')
+    m.drawmapboundary()
     
     
+    lats = []
+    lons = []
+    sics = []
+    for h5 in h5fList:
+        for me in h5f.getMeasureList():
+            lats.append(me.getLat())
+            lons.append(me.getLon())
+            sics.append(me.getSic())
     
+        
+        
+    lng = np.array(lons)
+    lat = np.array(lats)
+    sic = np.array(sics)
+    plt.figure()
+       
+    x1,y1= m(lng, lat)
+       
+    m.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
     
-    
-    #A esta altura ya estan las latitudes mayores y tierra
-    
-    
-    
-    #c3 = [filter(lambda x: x in c1, sublist) for sublist in c2]
+       
+    m.drawcoastlines()
+    m.fillcontinents(lake_color='white')
+    # draw parallels and meridians.
+    #m.drawparallels(np.arange(-80.,81.,20.))
+    #m.drawmeridians(np.arange(-180.,181.,20.))
+    #m.drawmapboundary(fill_color='white')
+
+
+    #m.colorbar(location="right",label="SIC") # draw colorbar
+    plt.title("Sea Ice Concentration - South Pole")
+    fig = plt.gcf()
+    plt.show()
    
    
-   
-   
+    plt.close()
+    
+    # Delete auxiliar variables.
+    del m
+    del lng    
+    del lat    
+    del sic    
+    del x1
+    del y1
+    
     
