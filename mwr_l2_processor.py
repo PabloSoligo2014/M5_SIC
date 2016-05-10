@@ -5,7 +5,7 @@ import tarfile
 import numpy as np
 import h5py
 
-import tarfile
+
 
 from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
@@ -20,6 +20,8 @@ from MultiBandBeanDict import MultiBandBeanDict
 
 from BandBeanList import BandBeanList
 from MultibandBean import MultibandBean
+from HD5FileList import HD5FileList
+
 #import gdal
 
 #import numpy as np
@@ -209,6 +211,8 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
                     
                 ne.lat        = lat
                 ne.lon        = lon
+                
+                #print "mySet TBS", dic[value][i][n_bean]
                 ne.setTbs(dic[value][i][n_bean])
                 ne.band       = band
                 ne.bean       = n_bean
@@ -234,8 +238,10 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
         
             indexActual   = filtrados[i].gg_index
             indexAnterior = filtrados[i].gg_index
+            tbsAcu = 0
+            cont = 0
             while (indexActual==indexAnterior)and(i<len(filtrados)-1):
-                tbsAcu = filtrados[i].getTbs()
+                tbsAcu = tbsAcu + filtrados[i].getTbs()
                 cont = cont + 1
                 i = i + 1
                 indexActual = filtrados[i].gg_index
@@ -243,6 +249,7 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
             
             indexAnterior = indexActual            
             promediado = Bean()
+            
             promediado.setTbs(tbsAcu/cont)
             promediado.lat        = filtrados[i-1].getLat()
             promediado.lon        = filtrados[i-1].getLon()
@@ -270,10 +277,8 @@ def draw_map(lat, lng, sic):
     # latitude circle boundinglat is tangent to the edge
     # of the map at lon_0. Default value of lat_ts
     # (latitude of true scale) is pole.
-
-
     m = Basemap(projection='spstere',boundinglat=-50,lon_0=270,resolution='h', round=True)
-   # Basemap()
+    # Basemap()
   
     plt.figure()
     for beam in range(8):        
@@ -508,7 +513,7 @@ if __name__ == "__main__":
     l1b_file = sys.argv[1]   
     
     
-    h5fList = []
+    h5fList = HD5FileList()
     
     for fi in range(1, len(sys.argv)):
         #l1b_file = mfile
@@ -518,86 +523,30 @@ if __name__ == "__main__":
         
         #clear = lambda: os.system('cls')
         #clear()   
-        
         #os.system("clear")
-        
-        
         #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
-        pf = passfile(l1b_file, [1])
+        pf = passfile(l1b_file, [1,3,5])
         mlist, beandic = processPassFile(pf)
-        
-        
-        
         #beandic.saveToFile("test.h5")
         #mlist.drawHk()
         #SIC, lat, lon, gg, dp, dg, Surface_type 
-     
         l1fn = pf.getSimpleFileName()
         l2fn = l1fn.replace("L1B", "L2B")
-        
-        
-        
-        h5f = hd5fileManager("./output/"+l2fn ,mlist, beandic)
+        h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
     
         #h5f.getMeasureList().drawHkSPole()
         #h5f.getMeasureList().drawHkNPole()
         #h5f.getMeasureList().drawNPole()
+        h5f.save(False)
         h5fList.append(h5f)
         #h5f.save()
         
         print "Clean filename->",pf.getCleanFileName()
         #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
     
-    m = Basemap(projection='npstere',boundinglat=50,lon_0=270,resolution='h', round=True)    
-    m.drawcoastlines()
-    m.drawcountries()
-    m.fillcontinents(color='coral')
-    m.drawmapboundary()
     
-    
-    lats = []
-    lons = []
-    sics = []
-    for h5 in h5fList:
-        for me in h5f.getMeasureList():
-            lats.append(me.getLat())
-            lons.append(me.getLon())
-            sics.append(me.getSic())
-    
-        
-        
-    lng = np.array(lons)
-    lat = np.array(lats)
-    sic = np.array(sics)
-    plt.figure()
-       
-    x1,y1= m(lng, lat)
-       
-    m.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
-    
-       
-    m.drawcoastlines()
-    m.fillcontinents(lake_color='white')
-    # draw parallels and meridians.
-    #m.drawparallels(np.arange(-80.,81.,20.))
-    #m.drawmeridians(np.arange(-180.,181.,20.))
-    #m.drawmapboundary(fill_color='white')
-
-
-    #m.colorbar(location="right",label="SIC") # draw colorbar
-    plt.title("Sea Ice Concentration - South Pole")
-    fig = plt.gcf()
-    plt.show()
-   
-   
-    plt.close()
-    
-    # Delete auxiliar variables.
-    del m
-    del lng    
-    del lat    
-    del sic    
-    del x1
-    del y1
+      
+    h5fList.drawNPole()
+    h5fList.drawHistograms()
     
     

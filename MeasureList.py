@@ -46,7 +46,7 @@ class MeasureList(list):
         
         result = []        
         for o in self:
-            print 
+            
             result.append(o.getSic())
         
         return result
@@ -68,6 +68,7 @@ class MeasureList(list):
         my_map.fillcontinents(color='coral')
         my_map.drawmapboundary()
     
+        #print "tamano:", len(self)
         for measure in self:
             x,y = my_map(measure.getLon(), measure.getLat())
             print  measure.getLat(), measure.getLon(), measure.getSic()
@@ -80,6 +81,7 @@ class MeasureList(list):
             else:
                 color = 'ro'    
     
+            
             my_map.plot(y, x, color, markersize=12)
 
         my_map.drawmeridians(np.arange(0, 360, 30))
@@ -124,7 +126,7 @@ class MeasureList(list):
             # draw parallels and meridians.
             m.drawparallels(np.arange(-80.,81.,20.))
             m.drawmeridians(np.arange(-180.,181.,20.))
-            m.drawmapboundary(fill_color='white')
+            m.drawmapboundary(fill_color='green')
     
         
             m.colorbar(location="right",label="SIC") # draw colorbar
@@ -164,7 +166,7 @@ class MeasureList(list):
             ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
             
             ms.drawcoastlines()
-            ms.fillcontinents(lake_color='white')
+            ms.fillcontinents(lake_color='green')
             ms.drawparallels(np.arange(-80.,81.,20.))
             ms.drawmeridians(np.arange(-180.,181.,20.))
             ms.drawmapboundary(fill_color='white')
@@ -188,6 +190,58 @@ class MeasureList(list):
             del y1
             
             return f_name
+            
+            
+    def saveImageHkNPole(self, folder, filename):
+        
+        print "Salvando, folder, filename:", folder, filename
+        if (len(self)!=0):
+            ms = Basemap(projection='npstere',boundinglat=50,lon_0=180,resolution='h', round=True)
+            lat = []
+            lng = []
+            sic = []
+            for s in self:
+                lng.append(s.getLon())
+                lat.append(s.getLat())
+                sic.append(s.getSic())
+                #print s.getLat(), s.getLon(), s.getSic()                 
+                
+            lng = np.array(lng)
+            lat = np.array(lat)
+            sic = np.array(sic)
+            
+            #plt.figure()
+            x1,y1= ms(lng, lat) 
+            ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
+            
+            ms.drawcoastlines()
+            ms.fillcontinents(lake_color='green')
+            ms.drawparallels(np.arange(-80.,81.,20.))
+            ms.drawmeridians(np.arange(-180.,181.,20.))
+            ms.drawmapboundary(fill_color='white')
+            ms.colorbar(location="right",label="SIC") # draw colorbar            
+            
+            #plt.title("Sea Ice south Concentration")
+            fig = plt.gcf()
+            #plt.show()
+            f_name = filename + "S.png"
+            
+            #mal solo sirve para linux
+            fig.savefig(folder+"/"+f_name)
+            
+            plt.close()
+            
+            
+            del ms
+
+            del lng    
+            del lat    
+            del sic    
+            del x1
+            del y1
+            
+            return f_name
+    
             
     def drawHkNPole(self, filename="nodet"):
         if (len(self)!=0):
@@ -199,7 +253,7 @@ class MeasureList(list):
                 lng.append(s.getLon())
                 lat.append(s.getLat())
                 sic.append(s.getSic())
-                print s.getLat(), s.getLon(), s.getSic()                 
+                #print s.getLat(), s.getLon(), s.getSic()                 
                 
             lng = np.array(lng)
             lat = np.array(lat)
@@ -210,7 +264,7 @@ class MeasureList(list):
             ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
             
             ms.drawcoastlines()
-            ms.fillcontinents(lake_color='white')
+            ms.fillcontinents(lake_color='green')
             ms.drawparallels(np.arange(-80.,81.,20.))
             ms.drawmeridians(np.arange(-180.,181.,20.))
             ms.drawmapboundary(fill_color='white')
@@ -234,6 +288,8 @@ class MeasureList(list):
             del y1
             
             return f_name
+    
+    
     
             
     def drawHkPoles(self, filename="nodet"):
@@ -271,7 +327,7 @@ class MeasureList(list):
             ms.drawmapboundary(fill_color='white')
             ms.colorbar(location="right",label="SIC") # draw colorbar            
             
-            plt.title("Sea Ice south Concentration")
+            plt.title("both poles")
             fig = plt.gcf()
             plt.show()
             f_name = "./img/"+filename + "S.png"
@@ -286,7 +342,7 @@ class MeasureList(list):
             mn.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
             
             mn.drawcoastlines()
-            mn.fillcontinents(lake_color='white')
+            mn.fillcontinents(lake_color='green')
             # draw parallels and meridians.
             mn.drawparallels(np.arange(-80.,81.,20.))
             mn.drawmeridians(np.arange(-180.,181.,20.))

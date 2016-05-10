@@ -34,6 +34,7 @@ class Bean:
         
     def setTbs(self, value):
         #print "set tbs", value
+    
         self.tbs = value    
         
     def addLat(self, value):

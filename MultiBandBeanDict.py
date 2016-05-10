@@ -8,9 +8,7 @@ import numpy as np
 
 
 class MultiBandBeanDict(dict):
-    
-    
-    
+
     def getSurfaceAsMatrix(self):
         #Elemento mas largo  de todos los beams
         maxval = 0
@@ -44,6 +42,7 @@ class MultiBandBeanDict(dict):
             for mbb in mbbl:
                 result[j,i] = mbb.getGG()
                 j = j + 1     
+        
         return result
     
     def getLonAsMatrix(self):

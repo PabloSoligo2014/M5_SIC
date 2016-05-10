@@ -60,9 +60,9 @@ class MultibandBean:
          
         val = numerador/denominador
         if(val<0):
-            return 0
+            return 0.0
         elif(val>1):
-            return 1
+            return 1.0
         else:
             return val
             
