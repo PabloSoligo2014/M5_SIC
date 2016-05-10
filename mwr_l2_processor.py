@@ -513,7 +513,7 @@ if __name__ == "__main__":
     l1b_file = sys.argv[1]   
     
     
-    h5fList = HD5FileList()
+    h5fList = HD5FileList([])
     
     for fi in range(1, len(sys.argv)):
         #l1b_file = mfile
@@ -546,7 +546,7 @@ if __name__ == "__main__":
     
     
       
-    h5fList.drawNPole()
-    h5fList.drawHistograms()
+    #h5fList.drawNPole()
+    #h5fList.drawHistograms()
     
     

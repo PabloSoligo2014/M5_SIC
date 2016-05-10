@@ -3,6 +3,15 @@
 Created on Tue May 10 11:07:38 2016
 
 @author: ubuntumate
+
+AUXDATA
+
+EO_20130424_000704_CUSS_SACD_MWR_L1B_SCI_078_000_004.tar.gz EO_20130424_014452_CUSS_SACD_MWR_L1B_SCI_071_000_004.tar.gz EO_20130424_032240_CUSS_SACD_MWR_L1B_SCI_064_000_004.tar.gz
+EO_20130424_050028_CUSS_SACD_MWR_L1B_SCI_057_000_004.tar.gz
+
+
+
+EO_20130424_000704_CUSS_SACD_MWR_L2B_SCI_078_000_004.h5 EO_20130424_014452_CUSS_SACD_MWR_L2B_SCI_071_000_004.h5 EO_20130424_032240_CUSS_SACD_MWR_L2B_SCI_064_000_004.h5 EO_20130424_050028_CUSS_SACD_MWR_L2B_SCI_057_000_004.h5
 """
 
 
@@ -16,18 +25,57 @@ import pylab as P
 from mwr_tie_points_finder import print_tie_points
 
 import h5py
+import sys
+
+from Bean import Bean
+
 
 class HD5FileList(list):
     
-    def __init__(self):
+    def __init__(self, filelist):
+        
+        super(list, self).__init__()
         self._lats = []
         self._lons = []
         self._sics = []  
         
         self._AP   = []
         self._AG   = []
+        self._filelist = filelist
         
-    
+        print self._filelist
+        
+        #beanlist = []
+        for fl in self._filelist:
+            
+            f = h5py.File("./output/"+fl, "r")
+            datadic = dict()
+            
+            
+            datadic["DP"]   = f["Intermediate Data"]["DP"][:] 
+            datadic["DG"]   = f["Intermediate Data"]["DG"][:] 
+            datadic["gg_index"]   = f["Intermediate Data"]["gg_index"][:] 
+            datadic["lat"]   = f["Intermediate Data"]["lat"][:] 
+            datadic["lon"]   = f["Intermediate Data"]["lon"][:] 
+            datadic["surface"]   = f["Intermediate Data"]["surface"][:] 
+            
+            #dp = datadic["DP"]
+                  
+            #Es matriz todos tiene en mismo largo
+            #print "len dp",  len(dp)
+            
+            
+                     
+            for i in range(0, len(datadic["DP"])):
+                for j in range(0, 8):
+                    bean = Bean ( datadic["gg_index"][i][j], datadic["lat"][i][j], datadic["lon"][i][j], 0, 0, j, datadic["surface"][i][j] )
+                    self.append(bean)
+                                        
+            """             
+
+            """
+            f.close()
+        print "Total de beans:", len(self)
         
     def _draw(self, title, x, y, bins):
         plt.figure()
@@ -191,4 +239,14 @@ class HD5FileList(list):
         del x1
         del y1
 
+
+if __name__ == "__main__":
     
+    l1b_file = sys.argv[1]   
+    
+    filelist = []
+    for fi in range(1, len(sys.argv)):
+        filelist.append(sys.argv[fi])
+        
+        
+    fm = HD5FileList(filelist)

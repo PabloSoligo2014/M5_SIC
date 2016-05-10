@@ -15,16 +15,25 @@ class Bean:
     band      = "No det"
     bean      = 0
     surface   = 0    
-    
+    """
     def __init__(self):
               
         self.gg_index  = 0
         self.lat       = 0.0
         self.lon       = 0.0
-        self.tbs       = 0
+        self.tbs       = 0.0
         self.band      = "No det"
         self.bean      = 0
         self.surface   = 0
+    """    
+    def __init__(self, gg_index=0, lat=0.0, lon=0.0, tbs=0.0, band="No det", bean=0, surface=0):
+        self.gg_index  = gg_index
+        self.lat       = lat
+        self.lon       = lon
+        self.tbs       = tbs
+        self.band      = band
+        self.bean      = bean
+        self.surface   = surface
         
     def getTbs(self):
         #MATIAS Como es que python no permite acceder a mas de un nivel de profundidad
