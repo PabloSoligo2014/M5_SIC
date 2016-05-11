@@ -29,6 +29,10 @@ import sys
 
 from Bean import Bean
 
+"""
+EO_20130426_003316_CUSS_SACD_MWR_L2B_SCI_074_000_004.h5 EO_20130430_190916_CUSS_SACD_MWR_L2B_SCI_099_000_004.h5 EO_20130430_204704_CUSS_SACD_MWR_L2B_SCI_092_000_004.h5
+"""
+
 
 class HD5FileList(list):
     
@@ -59,23 +63,22 @@ class HD5FileList(list):
             datadic["lon"]   = f["Intermediate Data"]["lon"][:] 
             datadic["surface"]   = f["Intermediate Data"]["surface"][:] 
             
-            #dp = datadic["DP"]
-                  
-            #Es matriz todos tiene en mismo largo
-            #print "len dp",  len(dp)
-            
-            
                      
             for i in range(0, len(datadic["DP"])):
                 for j in range(0, 8):
                     bean = Bean ( datadic["gg_index"][i][j], datadic["lat"][i][j], datadic["lon"][i][j], 0, 0, j, datadic["surface"][i][j] )
                     self.append(bean)
                                         
-            """             
 
-            """
             f.close()
         print "Total de beans:", len(self)
+        
+        for e in self:
+            print e.surface        
+        
+        listsurface1 = [elem for elem in self if elem.surface == 1]    
+        print "surface 1", listsurface1         
+        
         
     def _draw(self, title, x, y, bins):
         plt.figure()
