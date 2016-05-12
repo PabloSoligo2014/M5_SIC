@@ -11,21 +11,25 @@ class MultibandBean:
     ka_v_bean   = None
     cornet      = 0
     gg          = 0
+    surface     = 0
     
-    def __init__(self, Ak_h_bean, Aka_h_bean, Aka_v_bean, cornet, gg):
+    def __init__(self, Ak_h_bean, Aka_h_bean, Aka_v_bean, cornet, gg, surface):
         self.k_h_bean     = Ak_h_bean
         self.ka_h_bean    = Aka_h_bean
         self.ka_v_bean    = Aka_v_bean
         self.cornet       = cornet
         self.gg           = gg
-        
+        self.surface      = surface
         #MATIAS: Porque no puedo hacer un len de un atributo?"
         #Cualquier lenguaje permitiria hacerlo
         #len(self.k_h_bean)
 
     def getGG(self):
         return self.gg
-
+        
+    def getSurface(self):
+        return self.surface
+        
     def getK_h_bean(self):
         return self.k_h_bean
     def getKa_h_bean(self):
@@ -71,42 +75,42 @@ class MultibandBean:
         return (self.getFirstYearIceG()-self.getMultiYearIceG())/(self.getFirstYearIceP()-self.getMultiYearIceP())
     
     def getOpenWaterG(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return 12.36
         else:
             return 13.87
     
     def getFirstYearIceG(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return -5.66
         else:
             return -4.40
     
     def getMultiYearIceG(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return -10.24
         else:
             return -11.20
             
     def getOpenWaterP(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return 62.73
         else:
             return 73.31
     
     def getFirstYearIceP(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return 27.35
         else:
             return 21.60
     
     def getMultiYearIceP(self):
-        if (self.cornet+1 % 2 == 0):
+        if ((self.cornet+1) % 2 == 0):
             #es par
             return 25.04
         else:

@@ -23,11 +23,12 @@ import numpy as np
 import pylab as P
 
 from mwr_tie_points_finder import print_tie_points
+from L2Bean import L2Bean
+
 
 import h5py
 import sys
 
-from Bean import Bean
 
 """
 EO_20130426_003316_CUSS_SACD_MWR_L2B_SCI_074_000_004.h5 EO_20130430_190916_CUSS_SACD_MWR_L2B_SCI_099_000_004.h5 EO_20130430_204704_CUSS_SACD_MWR_L2B_SCI_092_000_004.h5
@@ -66,18 +67,53 @@ class HD5FileList(list):
                      
             for i in range(0, len(datadic["DP"])):
                 for j in range(0, 8):
-                    bean = Bean ( datadic["gg_index"][i][j], datadic["lat"][i][j], datadic["lon"][i][j], 0, 0, j, datadic["surface"][i][j] )
-                    self.append(bean)
+                   
+                   
+                   l2bean = L2Bean( datadic["gg_index"][i][j], datadic["lat"][i][j], datadic["lon"][i][j], j, datadic["surface"][i][j], datadic["DP"][i][j], datadic["DG"][i][j] )
+                    #(Ak_h_bean, Aka_h_bean, Aka_v_bean, cornet, gg, surface)                   
+                   
+                   
+                   self.append(l2bean)
                                         
 
             f.close()
-        print "Total de beans:", len(self)
+        #print "Total de beans:", len(self)
         
-        for e in self:
-            print e.surface        
+              
         
-        listsurface1 = [elem for elem in self if elem.surface == 1]    
-        print "surface 1", listsurface1         
+        #listsurface1 = [elem for elem in self if elem.surface == 1]    
+        
+    #Dibuja histrogramas a partir de los datos tomados de los archivo
+        
+        
+    def drawTiePointsHistrogram(self):
+        pass
+    
+    def drawFHistrograms(self) :
+        
+        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
+        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
+        minv = min(len(ApEvenSouth), len(AgEvenSouth))
+        self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 500)
+
+
+        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0] 
+        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0] 
+        minv = min(len(ApEvenNorth), len(AgEvenNorth))
+        self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 500)
+
+
+        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0] 
+        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0] 
+        minv = min(len(ApOddSouth), len(AgOddSouth))
+        self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 500)
+
+        
+        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0] 
+        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0] 
+        minv = min(len(ApOddNorth), len(AgOddNorth))
+        self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 500)
+ 
         
         
     def _draw(self, title, x, y, bins):
@@ -162,11 +198,6 @@ class HD5FileList(list):
         #self._draw("Histrograma sur/impar", ApOddSouth, AgOddSouth, 500)
         #self._draw("Histrograma norte/par", ApEvenNorth, AgEvenNorth, 500)
         
-        
-        
-        
-        
-        
         """
         ICE. counts = 29.0 p = 37.2 g = -28.8
         ICE. counts = 25.0 p = 35.6 g = -28.8
@@ -175,9 +206,6 @@ class HD5FileList(list):
         SEA. counts = 6.0 p = 66.0 g = 36.8
         SEA. counts = 5.0 p = 66.0 g = 38.4
         """
-        
-        
-    
     def getLatAsNp(self):
         return np.array(self._lats)
         
@@ -217,23 +245,15 @@ class HD5FileList(list):
         m.drawcountries()
         m.fillcontinents(color='coral')
         m.drawmapboundary()
-        
-           
-        
         # draw parallels and meridians.
         #m.drawparallels(np.arange(-80.,81.,20.))
         #m.drawmeridians(np.arange(-180.,181.,20.))
         #m.drawmapboundary(fill_color='white')
-    
-    
         #m.colorbar(location="right",label="SIC") # draw colorbar
         plt.title("Final")
         #fig = plt.gcf()
         plt.show()
-        
-       
         plt.close()
-         
         # Delete auxiliar variables.
         del m
         del lng    
@@ -253,3 +273,5 @@ if __name__ == "__main__":
         
         
     fm = HD5FileList(filelist)
+    fm.drawFHistrograms()
+    

@@ -459,7 +459,7 @@ def processPassFile(pf):
             #agrupa para una toma todas las bandas.... 
             #print "values-->", bean_k_h[y].getTbs(), bean_ka_h[y].getTbs(), bean_ka_v[y].getTbs()                  
                         
-            mb = MultibandBean(bean_k_h[y], bean_ka_h[y], bean_ka_v[y], x, bean_k_h[y].getGG())
+            mb = MultibandBean(bean_k_h[y], bean_ka_h[y], bean_ka_v[y], x, bean_k_h[y].getGG(), bean_k_h[y].getSurface())
                         
             #print mb.getLat(), mb.getLon(), mb.getSic()
             

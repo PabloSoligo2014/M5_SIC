@@ -22,7 +22,7 @@ class MultiBandBeanDict(dict):
             mbbl = self["Bean"+str(i)]
             j=0
             for mbb in mbbl:
-                result[j,i] = mbb.getGG()
+                result[j,i] = mbb.getSurface()
                 j = j + 1 
                 
         return result
