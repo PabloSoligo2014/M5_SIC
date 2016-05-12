@@ -90,6 +90,8 @@ class HD5FileList(list):
         pass
     
     def drawFHistrograms(self) :
+
+
         
         ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
         AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
@@ -114,7 +116,15 @@ class HD5FileList(list):
         minv = min(len(ApOddNorth), len(AgOddNorth))
         self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 500)
  
-        
+        """
+        Ultima charla con Sergio indica hacer lo siguiente:
+            ->Usar la funcion de Matias, hacerlo por numero de bean...obtener DP/DG y count, la funcion devuelve mas de uno, quedarse
+            con el mas grande (imagino que de count) o el promedio. Hacerlo por hemisferio, quedan 16 "Graficos"
+
+            ->Tomar los valores resultantes que y graficarlos en 4 graficos ahora si por beans pares e impares y norte y sur. Quedarian
+            4 graficos con cuatro 4 puntos no???
+
+        """
         
     def _draw(self, title, x, y, bins):
         plt.figure()
