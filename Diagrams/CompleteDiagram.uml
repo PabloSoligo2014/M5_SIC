@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
+  <nodes>
+    <node x="-41.20818915801624" y="1390.1764705882351">MultibandBean.MultibandBean</node>
+    <node x="1004.3414071510956" y="1839.249134948097">Measure.Measure</node>
+    <node x="1179.0" y="835.0">MultiBandBeanDict.MultiBandBeanDict</node>
+    <node x="850.4988465974627" y="1388.8471741637832">Bean.Bean</node>
+    <node x="504.4382929642445" y="1843.2370242214533">mwr_l2_processor.passfile</node>
+    <node x="-398.53806228373685" y="918.046712802768">HD5FileList.HD5FileList</node>
+    <node x="-556.7243367935407" y="1193.2110726643593">hd5fileManager.hd5fileManager</node>
+    <node x="924.0" y="0.0">dict</node>
+    <node x="0.0" y="0.0">list</node>
+    <node x="246.68281430219145" y="930.978085351788">MeasureList.MeasureList</node>
+    <node x="782.6862745098041" y="1024.3904267589385">HD5L2Files.HD5L2Files</node>
+    <node x="-42.53748558246832" y="1837.9198385236446">L2Bean.L2Bean</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="MeasureList.MeasureList" target="list">
+      <point x="0.0" y="-130.0" />
+      <point x="0.0" y="382.0" />
+    </edge>
+    <edge source="HD5FileList.HD5FileList" target="list">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="HD5L2Files.HD5L2Files" target="list">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
+      <point x="0.0" y="-77.5" />
+      <point x="0.0" y="392.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5522776572668113" x="955.5054988216809" y="686.0549882168107" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+

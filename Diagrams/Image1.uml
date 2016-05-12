@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
+  <nodes>
+    <node x="-621.3333333333333" y="-1110.6666666666663">MultibandBean.MultibandBean</node>
+    <node x="-894.6666666666666" y="-370.3333333333333">mwr_l2_processor.passfile</node>
+    <node x="-891.3333333333333" y="115.66666666666663">Bean.Bean</node>
+    <node x="276.9999999999998" y="487.0000000000001">MultiBandBeanDict.MultiBandBeanDict</node>
+    <node x="274.6666666666665" y="123.66666666666686">L2Bean.L2Bean</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="-8.5" y="-679.0" />
+  <SelectedNodes>
+    <node>MultibandBean.MultibandBean</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+
