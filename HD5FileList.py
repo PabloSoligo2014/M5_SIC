@@ -28,6 +28,9 @@ from L2Bean import L2Bean
 
 import h5py
 import sys
+import mwr_tie_points_finder
+from scipy.stats import gaussian_kde
+
 
 
 """
@@ -48,9 +51,10 @@ class HD5FileList(list):
         self._AG   = []
         self._filelist = filelist
         
-        print self._filelist
+        #print self._filelist
         
         #beanlist = []
+        
         for fl in self._filelist:
             
             f = h5py.File("./output/"+fl, "r")
@@ -89,32 +93,254 @@ class HD5FileList(list):
     def drawTiePointsHistrogram(self):
         pass
     
-    def drawFHistrograms(self) :
-
-
+    def plot_histogram(self, x, y, title):
         
-        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
-        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0] 
+        """ Plots a 2d histogram
+        """
+        print "plotting", title, "histogram"  
+        new_x=np.array(x[1])
+        new_y=np.array(y[1])
+        xy = np.vstack([new_x,new_y])
+        z = gaussian_kde(xy)(xy)       
+        idx = z.argsort()
+        x, y, z = new_x[idx], new_y[idx], z[idx]
+        fig, ax = plt.subplots()
+        ax.scatter(x,y,c=z, s=20, edgecolor='')
+        plt.title(title)
+        plt.show()
+        fig = plt.gcf()
+        fig.savefig(title + ".png")
+        #plt.clf()
+        
+    def plot_points(self, x, y, title):      
+        
+        plt.title(title)
+        #plt.plot([x[0], y[0]], [x[1], y[1]] ,'o',label=1)
+        plt.plot(x, y,'o',label=1)
+        plt.xlabel("DP")
+        plt.ylabel("DG")
+        plt.legend(loc='best')
+        plt.show()
+        
+        #sys.exit()
+
+    
+        
+    def drawPointsHistograms2(self):
+                #result
+    
+        parNorteAp   = []
+        parNorteAg   = []
+        imparNorteAp = []
+        imparNorteAg = []
+        
+        parSurAp   = []
+        parSurAg   = []
+        imparSurAp = []
+        imparSurAg = []
+        
+            
+                    
+        
+    
+        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        
         minv = min(len(ApEvenSouth), len(AgEvenSouth))
-        self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 500)
-
-
-        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0] 
-        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0] 
-        minv = min(len(ApEvenNorth), len(AgEvenNorth))
-        self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 500)
-
-
-        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0] 
-        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0] 
-        minv = min(len(ApOddSouth), len(AgOddSouth))
-        self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 500)
+        #print "histo con problemas", ApEvenSouth, AgEvenSouth
+        self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
 
         
-        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0] 
-        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0] 
+        
+    
+        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        minv = min(len(ApEvenNorth), len(AgEvenNorth))
+        self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 200)
+        
+
+        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        minv = min(len(ApOddSouth), len(AgOddSouth))
+        self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
+
+        
+        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         minv = min(len(ApOddNorth), len(AgOddNorth))
-        self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 500)
+        self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 200)
+
+        
+        
+        
+        
+        
+    def drawTiePointsHistograms(self):
+        
+        ##realizamos todos los agrupamientos para estar listo segun consigna indique        
+        
+        icePs = []
+        iceGs = []
+        seaPs = []
+        seaGs = []
+        
+        icePsEvenNorth = []
+        iceGsEvenNorth = []      
+        seaPsEvenNorth = []
+        seaGsEvenNorth = []    
+        
+        icePsOddNorth = []
+        iceGsOddNorth = []      
+        seaPsOddNorth = []
+        seaGsOddNorth = [] 
+        
+        
+        icePsEvenSouth = []
+        iceGsEvenSouth = []      
+        seaPsEvenSouth = []
+        seaGsEvenSouth = []    
+        
+        icePsOddSouth = []
+        iceGsOddSouth = []      
+        seaPsOddSouth = []
+        seaGsOddSouth = [] 
+        
+        tiepoints = []
+        
+        
+        
+        #iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points(self.getDGAsArray(), self.getDPAsArray())
+        
+        
+        
+        ap = []
+        ag = []
+        for i in range(0,8):
+            #print "tam:", len(self.getDGbyBean(i, 'N'))
+            if((i+1)%2==1):
+                iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'N'), self.getDGbyBean(i, 'N') )
+                icePs.append(IceP)
+                iceGs.append(IceG)
+                seaPs.append(SeaP)
+                seaGs.append(SeaG)
+                ap.append(IceP)
+                ap.append(SeaP)
+                
+                ag.append(IceG)
+                ag.append(SeaG)
+                
+            
+        self.plot_points(ap, ag, "Points Norte, impar")    
+        print "finalizada imp"   
+        ap = []
+        ag = []
+        i = 0
+        
+        for i in range(0,8):
+            if(((i+1)%2)==0):
+                iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'N'), self.getDGbyBean(i, 'N') )
+                icePs.append(IceP)
+                iceGs.append(IceG)
+                seaPs.append(SeaP)
+                seaGs.append(SeaG)
+                ap.append(IceP)
+                ap.append(SeaP)
+                
+                ag.append(IceG)
+                ag.append(SeaG)
+                
+            
+        print "imprimiendo norte par"   
+        self.plot_points(ap, ag, "Points Norte, par")   
+        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)     
+        
+        
+        ap = []
+        ag = []
+        
+        for i in range(0,8):
+            if((i+1)%2==1):
+                iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'S'), self.getDGbyBean(i, 'S') )
+                icePs.append(IceP)
+                iceGs.append(IceG)
+                seaPs.append(SeaP)
+                seaGs.append(SeaG)
+                ap.append(IceP)
+                ap.append(SeaP)
+                
+                ag.append(IceG)
+                ag.append(SeaG)
+                
+            
+        print "imprimiendo sur impar"   
+        self.plot_points(ap, ag, "Points sur, impar")   
+        
+        
+        
+        ap = []
+        ag = []
+        
+        for i in range(0,8):
+            if((i+1)%2==0):
+                iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'S'), self.getDGbyBean(i, 'S') )
+                icePs.append(IceP)
+                iceGs.append(IceG)
+                seaPs.append(SeaP)
+                seaGs.append(SeaG)
+                ap.append(IceP)
+                ap.append(SeaP)
+                
+                ag.append(IceG)
+                ag.append(SeaG)
+                
+            
+        print "imprimiendo sur par"   
+        self.plot_points(ap, ag, "Points sur, par") 
+        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)   
+        
+    def getDPbyBean(self, nroBean, hemisferio):
+        if (hemisferio=='N'):
+            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()>0) and elem.getGG()!=-99)] 
+        else:
+            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()<0) and elem.getGG()!=-99)] 
+        
+        return result
+            
+        
+    def getDGbyBean(self, nroBean, hemisferio):
+        if (hemisferio=='N'):
+            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()>0) and elem.getGG()!=-99) ] 
+        else:
+            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()<0) and elem.getGG()!=-99)] 
+            
+        return result
+    
+    def drawFHistrograms(self):
+        #result
+        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        minv = min(len(ApEvenSouth), len(AgEvenSouth))
+        
+        #print "histo con problemas", ApEvenSouth, AgEvenSouth
+        self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
+
+
+        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        minv = min(len(ApEvenNorth), len(AgEvenNorth))
+        self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 200)
+
+
+        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        minv = min(len(ApOddSouth), len(AgOddSouth))
+        self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
+
+        
+        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        minv = min(len(ApOddNorth), len(AgOddNorth))
+        self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 200)
  
         """
         Ultima charla con Sergio indica hacer lo siguiente:
@@ -129,7 +355,7 @@ class HD5FileList(list):
     def _draw(self, title, x, y, bins):
         plt.figure()
                    
-        plt.hist2d(x, y, bins=500)
+        plt.hist2d(x, y, bins)
         plt.title(title)
         plt.show()
     
@@ -278,10 +504,16 @@ if __name__ == "__main__":
     l1b_file = sys.argv[1]   
     
     filelist = []
-    for fi in range(1, len(sys.argv)):
-        filelist.append(sys.argv[fi])
+    #for fi in range(1, len(sys.argv)):
+    #    filelist.append(sys.argv[fi])
+     
+    import os
+    for fs in os.listdir("./output/"):
+        if fs.endswith("h5"):
+            filelist.append(fs)
         
-        
+    #print filelist
     fm = HD5FileList(filelist)
-    fm.drawFHistrograms()
+    fm.drawPointsHistograms2()
+    fm.drawTiePointsHistograms()
     

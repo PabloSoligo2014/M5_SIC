@@ -53,6 +53,13 @@ def print_tie_points(delta_P, delta_G):
         hist[r, c] += 1
 
 
+    maxicecount = 0
+    maxseacount = 0
+    maxiceg = 0
+    maxseag = 0
+    maxicep = 0
+    maxseap = 0
+    
     for i in range(3):
         ice = hist[:,:iPR]
         (j , k) = np.where(ice == np.max(ice))
@@ -62,6 +69,12 @@ def print_tie_points(delta_P, delta_G):
         iceCount = np.max(ice) 
         iceP = j * DELTA_PR + PR_MIN
         iceG = k * DELTA_GR + GR_MIN
+        
+        
+        if iceCount>maxicecount:
+            maxicecount=iceCount
+            maxicep = iceP
+            maxiceg = iceG
         print "p =", iceP, "g =", iceG
         hist[j,k] = 0
     
@@ -74,9 +87,14 @@ def print_tie_points(delta_P, delta_G):
         seaP     = (j) * DELTA_PR + PR_MIN       
         seaG     = (k+iPR) * DELTA_GR + GR_MIN
         
+        if seaCount>maxseacount:
+            maxseacount = seaCount
+            maxseap = seaP
+            maxseag = seaG
+            
         print "SEA. counts =", seaCount, 
         print "p =", seaP , "g =", seaG
         hist[j,k+iPR] = 0
 
-    return iceCount, IceP, iceG, seaCount, SeaP, seaG    
+    return maxicecount, maxicep, maxiceg, maxseacount, maxseap, maxseag    
     
