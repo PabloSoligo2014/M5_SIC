@@ -300,7 +300,7 @@ class HD5FileList(list):
         
     def getDPbyBean(self, nroBean, hemisferio):
         if (hemisferio=='N'):
-            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()>0) and elem.getGG()!=-99)] 
+            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.isNorth()) and elem.getGG()!=-99)] 
         else:
             result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()<0) and elem.getGG()!=-99)] 
         

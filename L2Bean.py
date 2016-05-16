@@ -19,6 +19,10 @@ class L2Bean:
         self._DP = DP
         self._DG = DG
 
+    def isNorth(self):
+        return (self._lat>0)
+        
+    
     
     def getGG(self):
         return self._gg
