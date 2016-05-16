@@ -40,7 +40,14 @@ EO_20130426_003316_CUSS_SACD_MWR_L2B_SCI_074_000_004.h5 EO_20130430_190916_CUSS_
 
 class HD5FileList(list):
     
-    def __init__(self, filelist):
+    def getSics(self):
+        return self._sics
+    def getLons(self):
+        return self._lons
+    def getLats(self):
+        return self._lats
+    
+    def __init__(self, filefolder, filelist):
         
         super(list, self).__init__()
         self._lats = []
@@ -57,7 +64,7 @@ class HD5FileList(list):
         
         for fl in self._filelist:
             
-            f = h5py.File("./output/"+fl, "r")
+            f = h5py.File(filefolder+fl, "r")
             datadic = dict()
             
             
@@ -116,6 +123,9 @@ class HD5FileList(list):
         
         plt.title(title)
         #plt.plot([x[0], y[0]], [x[1], y[1]] ,'o',label=1)
+        
+      
+        
         plt.plot(x, y,'o',label=1)
         plt.xlabel("DP")
         plt.ylabel("DG")
@@ -128,7 +138,7 @@ class HD5FileList(list):
         
     def drawPointsHistograms2(self):
                 #result
-    
+        """
         parNorteAp   = []
         parNorteAg   = []
         imparNorteAp = []
@@ -138,7 +148,7 @@ class HD5FileList(list):
         parSurAg   = []
         imparSurAp = []
         imparSurAg = []
-        
+        """
             
                     
         
@@ -183,7 +193,7 @@ class HD5FileList(list):
         iceGs = []
         seaPs = []
         seaGs = []
-        
+        """
         icePsEvenNorth = []
         iceGsEvenNorth = []      
         seaPsEvenNorth = []
@@ -206,7 +216,7 @@ class HD5FileList(list):
         seaGsOddSouth = [] 
         
         tiepoints = []
-        
+        """
         
         
         #iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points(self.getDGAsArray(), self.getDPAsArray())
@@ -231,7 +241,7 @@ class HD5FileList(list):
                 
             
         self.plot_points(ap, ag, "Points Norte, impar")    
-        print "finalizada imp"   
+        
         ap = []
         ag = []
         i = 0
@@ -272,7 +282,7 @@ class HD5FileList(list):
                 ag.append(SeaG)
                 
             
-        print "imprimiendo sur impar"   
+        
         self.plot_points(ap, ag, "Points sur, impar")   
         
         
@@ -294,51 +304,119 @@ class HD5FileList(list):
                 ag.append(SeaG)
                 
             
-        print "imprimiendo sur par"   
+        
         self.plot_points(ap, ag, "Points sur, par") 
-        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)   
+        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)  
+        
+    def drawWholeMap(self):
+        
+        my_map = Basemap(projection='npstere',boundinglat=50,lon_0=270,resolution='h', round=True)    
+        my_map.drawcoastlines()
+        my_map.drawcountries()
+        my_map.fillcontinents(color='coral')
+        my_map.drawmapboundary()
+
+        #print "tamano:", len(self)
+        sics =[]
+        lats = []
+        lons = []
+        for element in self:
+            type(element)
+            sics.append(element.getSic())
+            lats.append(element.getLat())
+            lons.append(element.getLon())
+            
+            
+        npsics = np.array(sics)
+        nplats = np.array(lats)
+        nplons = np.array(lons)
+        
+         
+        
+        #plt.figure()
+        
+        x1,y1= my_map(nplons, nplats)
+       
+        #print "x, y, sic", x1, y1, sics
+        print "Cantidad final de sics->", len(npsics)
+        my_map.hexbin(x1,y1, C=npsics, gridsize=len(npsics)/100, cmap=plt.cm.jet)
+    
+ 
+        my_map.drawmeridians(np.arange(0, 360, 30))
+        my_map.drawparallels(np.arange(-90, 90, 30))
+        
+    
+        #plt.gcf().set_size_inches(18,10)
+        #plt.show()    
+     
+        
+        
+    def saveToFile(self, filename):
+        ##realizamos todos los agrupamientos para estar listo segun consigna indique        
+        
+        
+        text_file = open(filename, "w")
+        text_file.writelines("Hemisferio Norte\n")    
+        text_file.writelines("Nro\t\tIceP\t\tIceG\t\tSeaP\t\tSeaG\n")    
+            
+        for i in range(0,8):
+            iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'N'), self.getDGbyBean(i, 'N') )
+            text_file.writelines(str(i)+"\t\t"+str(IceP)+"\t\t"+str(IceG)+"\t\t"+str(SeaP)+"\t\t"+str(SeaG)+"\n")    
+         
+         
+        text_file.writelines("Hemisferio Sur\n")    
+        text_file.writelines("Nro\t\tIceP\t\tIceG\t\tSeaP\t\tSeaG\n")   
+        for i in range(0,8):
+            iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points( self.getDPbyBean(i, 'S'), self.getDGbyBean(i, 'S') )
+            text_file.writelines(str(i)+"\t\t"+str(IceP)+"\t\t"+str(IceG)+"\t\t"+str(SeaP)+"\t\t"+str(SeaG)+"\n")    
+         
+       
+            
+        text_file.close()
+        
+        
         
     def getDPbyBean(self, nroBean, hemisferio):
         if (hemisferio=='N'):
             result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.isNorth()) and elem.getGG()!=-99)] 
         else:
-            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()<0) and elem.getGG()!=-99)] 
+            result = [elem.getDP() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (not elem.isNorth()) and elem.getGG()!=-99)] 
         
         return result
             
         
     def getDGbyBean(self, nroBean, hemisferio):
         if (hemisferio=='N'):
-            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()>0) and elem.getGG()!=-99) ] 
+            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.isNorth()) and elem.getGG()!=-99) ] 
         else:
-            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (elem.getLat()<0) and elem.getGG()!=-99)] 
+            result = [elem.getDG() for elem in self if ((elem.getSurface() in (1,5))  and  (elem.getBean() == nroBean) and (not elem.isNorth()) and elem.getGG()!=-99)] 
             
         return result
     
     def drawFHistrograms(self):
         #result
-        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
-        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and (not elem.isNorth()) and elem.getGG()!=-99] 
+        AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and (not elem.isNorth()) and elem.getGG()!=-99] 
         minv = min(len(ApEvenSouth), len(AgEvenSouth))
         
         #print "histo con problemas", ApEvenSouth, AgEvenSouth
         self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
 
 
-        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
-        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.isNorth() and elem.getGG()!=-99] 
+        AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.isNorth() and elem.getGG()!=-99] 
         minv = min(len(ApEvenNorth), len(AgEvenNorth))
         self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 200)
 
 
-        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
-        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
+        ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and (not elem.isNorth()) and elem.getGG()!=-99] 
+        AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and (not elem.isNorth()) and elem.getGG()!=-99] 
         minv = min(len(ApOddSouth), len(AgOddSouth))
         self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
 
         
-        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
-        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
+        ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.isNorth() and elem.getGG()!=-99] 
+        AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.isNorth() and elem.getGG()!=-99] 
         minv = min(len(ApOddNorth), len(AgOddNorth))
         self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 200)
  
@@ -499,21 +577,5 @@ class HD5FileList(list):
         del y1
 
 
-if __name__ == "__main__":
-    
-    l1b_file = sys.argv[1]   
-    
-    filelist = []
-    #for fi in range(1, len(sys.argv)):
-    #    filelist.append(sys.argv[fi])
-     
-    import os
-    for fs in os.listdir("./output/"):
-        if fs.endswith("h5"):
-            filelist.append(fs)
-        
-    #print filelist
-    fm = HD5FileList(filelist)
-    fm.drawPointsHistograms2()
-    fm.drawTiePointsHistograms()
+
     

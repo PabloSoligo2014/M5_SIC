@@ -354,9 +354,9 @@ def processPassFile(pf):
     beans_ka_hFinal = []
     beans_ka_vFinal = []
     
-    bean_k_h = pf.getbeans_k_h()[0]
-    bean_ka_h = pf.getbeans_ka_h()[0]
-    bean_ka_h = pf.getbeans_ka_v()[0]
+    bean_k_h    = pf.getbeans_k_h()[0]
+    bean_ka_h   = pf.getbeans_ka_h()[0]
+    bean_ka_h   = pf.getbeans_ka_v()[0]
     
     
     for i in range(0,8):
@@ -513,7 +513,7 @@ if __name__ == "__main__":
    
     l1b_file = sys.argv[1]   
     
-    h5fList = HD5FileList([])
+    #h5fList = HD5FileList([])
     
     for fs in os.listdir("./MWR_pasadas/"):        
         if fs.endswith("tar.gz") and fs.startswith("EO"):
@@ -538,7 +538,7 @@ if __name__ == "__main__":
             #h5f.getMeasureList().drawHkNPole()
             #h5f.getMeasureList().drawNPole()
             h5f.save(False)
-            h5fList.append(h5f)
+            #h5fList.append(h5f)
             #h5f.save()
             
             print "Clean filename->",pf.getCleanFileName()
