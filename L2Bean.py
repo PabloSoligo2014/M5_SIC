@@ -18,6 +18,9 @@ class L2Bean:
         self._surface = surface
         self._DP = DP
         self._DG = DG
+        
+    def __eq__(self, other):
+        return self._gg == other._gg
 
     def isNorth(self):
         return (self._lat>0)

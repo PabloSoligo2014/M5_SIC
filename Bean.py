@@ -63,6 +63,8 @@ class Bean:
     def getSurface(self):
         return self.surface
         
+    
+        
     def getGG(self):
         return self.gg_index
         

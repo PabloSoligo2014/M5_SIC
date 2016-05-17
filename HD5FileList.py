@@ -30,6 +30,7 @@ import h5py
 import sys
 import mwr_tie_points_finder
 from scipy.stats import gaussian_kde
+from L3Bean import L3Bean
 
 
 
@@ -46,6 +47,8 @@ class HD5FileList(list):
         return self._lons
     def getLats(self):
         return self._lats
+        
+    
     
     def __init__(self, filefolder, filelist):
         
@@ -158,7 +161,7 @@ class HD5FileList(list):
         
         minv = min(len(ApEvenSouth), len(AgEvenSouth))
         #print "histo con problemas", ApEvenSouth, AgEvenSouth
-        self._draw("Histrograma sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
+        self._draw("Densigrama sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
 
         
         
@@ -166,19 +169,19 @@ class HD5FileList(list):
         ApEvenNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         AgEvenNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         minv = min(len(ApEvenNorth), len(AgEvenNorth))
-        self._draw("Histrograma norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 200)
+        self._draw("Densigrama norte/par", ApEvenNorth[0:minv], AgEvenNorth[0:minv], 200)
         
 
         ApOddSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
         AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
         minv = min(len(ApOddSouth), len(AgOddSouth))
-        self._draw("Histrograma sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
+        self._draw("Densigrama sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
 
         
         ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         minv = min(len(ApOddNorth), len(AgOddNorth))
-        self._draw("Histrograma norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 200)
+        self._draw("Densigrama norte/impar", ApOddNorth[0:minv], AgOddNorth[0:minv], 200)
 
         
         
@@ -306,49 +309,93 @@ class HD5FileList(list):
             
         
         self.plot_points(ap, ag, "Points sur, par") 
-        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)  
+        #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)
         
-    def drawWholeMap(self):
+    
+    def getMedsValues(self):
+        pass
+        
+        
+        
+    def drawWholeNorthMap(self):
+       
+        #Se usa diccionario tratando de mejorar tiempos
+        l3beanDict = dict()
+        print "Arrancando lista final"
+        for element in self:
+            
+            b = l3beanDict.get(str(element.getGG()), None)
+            
+            if b==None:
+                
+                b = L3Bean()
+                b.add(element)
+                l3beanDict[str(element.getGG())] = b
+                
+            else:
+                
+                b.add(element)
+                #print "encontrado"
+        
+        print "tamano de lista final", len(l3beanDict)
+        
+        
+        
         
         my_map = Basemap(projection='npstere',boundinglat=50,lon_0=270,resolution='h', round=True)    
         my_map.drawcoastlines()
         my_map.drawcountries()
-        my_map.fillcontinents(color='coral')
-        my_map.drawmapboundary()
-
-        #print "tamano:", len(self)
-        sics =[]
-        lats = []
-        lons = []
-        for element in self:
-            type(element)
-            sics.append(element.getSic())
-            lats.append(element.getLat())
-            lons.append(element.getLon())
-            
-            
-        npsics = np.array(sics)
-        nplats = np.array(lats)
-        nplons = np.array(lons)
+        my_map.fillcontinents(color='grey')
+        my_map.drawmapboundary(fill_color='aqua')
         
-         
+        #print "tamano:", len(self)
+        #sics =[]
+        #lats = []
+        #lons = []
+        
+        
+
+        
+                        
+            
+        #Al no existir o no conocer la posibilidad de crear listas con tipos
+        #Generics(C#-Java)/Templates(C++) no es clara la mejor solucion
+        #si crear listas propias o realizar los filtros como se indica
+        #sics = [elem.getMedSic for elem in l3beanlist if (True) ]    
+            
+        l3beanlist = list(l3beanDict.values())
+        
+        print "tam de lista", len(l3beanlist)
+        
+        sics = [elem.getMedSic() for elem in l3beanlist]
+        lats = [elem.getLat() for elem in l3beanlist]
+        lons = [elem.getLon() for elem in l3beanlist]
+        
+        
+        #npsics = np.array(sics)
+        #nplats = np.array(lats)
+        #nplons = np.array(lons)
+        #print "tam de np", len(sics), len(lats), len(nplons)
         
         #plt.figure()
+        #print "lats, lons", lats, lons        
+        x1,y1= my_map(lons, lats)
         
-        x1,y1= my_map(nplons, nplats)
-       
+        
         #print "x, y, sic", x1, y1, sics
-        print "Cantidad final de sics->", len(npsics)
-        my_map.hexbin(x1,y1, C=npsics, gridsize=len(npsics)/100, cmap=plt.cm.jet)
-    
- 
+        #print "Cantidad final de sics->", len(npsics)
+        #my_map.hexbin(x1,y1, C=npsics, gridsize=len(npsics)/1, cmap=plt.cm.jet)
+        my_map.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
+         
         my_map.drawmeridians(np.arange(0, 360, 30))
         my_map.drawparallels(np.arange(-90, 90, 30))
         
-    
+   
         #plt.gcf().set_size_inches(18,10)
         #plt.show()    
-     
+        del sics
+        del lats
+        del lons
         
         
     def saveToFile(self, filename):

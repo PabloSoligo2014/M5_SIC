@@ -247,12 +247,15 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
                 cont = cont + 1
                 i = i + 1
                 indexActual = filtrados[i].gg_index
+                if (surface in (1,5)) and (filtrados[i].surface==3):
+                    surface = filtrados[i].surface #3 tiene precedencia
                     
             
             indexAnterior = indexActual            
             promediado = Bean()
             
             promediado.setTbs(tbsAcu/cont)
+            
             promediado.lat        = filtrados[i-1].getLat()
             promediado.lon        = filtrados[i-1].getLon()
             promediado.gg_index   = filtrados[i-1].getGG()
@@ -474,36 +477,6 @@ def processPassFile(pf):
 
     #print "Tamano de measure list->", len(measureListB)
      
-
-    # Open an existing file using default properties.
-    """
-    l1fn = pf.getSimpleFileName()
-    l2fn = l1fn.replace("L1B", "L2B")
-    print "simpleFileName", l2fn
-    mfile = h5py.File("./output/"+l2fn,'w')
-    # Open "dset" dataset under the root group.
-  
-    psics = []
-
-        
-    npsics = np.array(psics)
-    
-    #dataset = mfile.create_dataset("dset",(1, len(sics)), )
-    
-    dataset = mfile.create_dataset("dset",data=npsics)
-    
-    
-    #print "Dataset dataspace is", dataset.shape
-    #print "Dataset Numpy datatype is", dataset.dtype
-    #print "Dataset name is", dataset.name
-    #print "Dataset is a member of the group", dataset.parent
-    #print "Dataset was created in the file", dataset.file    
-
-    mfile.flush()
-    mfile.close()
-    """
-    
-    #return measureListA
     return measureListB, beandic
 
 

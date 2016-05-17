@@ -11,6 +11,7 @@ from HD5FileList import HD5FileList
 
 
 
+
 if __name__ == "__main__":
     
     
@@ -31,10 +32,11 @@ if __name__ == "__main__":
     #print filelist
    
     fm = HD5FileList(folder, filelist)
-    fm.saveToFile("dgdp.txt")
+    fm.saveToFile("dgdp.txt") 
     #fm.drawPointsHistograms2()
     #fm.drawTiePointsHistograms()
-    fm.drawWholeMap()
+    fm.drawWholeNorthMap()
+    #fm.drawWholeSouthMap()
     
     
     
