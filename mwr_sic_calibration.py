@@ -33,10 +33,13 @@ if __name__ == "__main__":
    
     fm = HD5FileList(folder, filelist)
     fm.saveToFile("dgdp.txt") 
-    #fm.drawPointsHistograms2()
-    #fm.drawTiePointsHistograms()
-    fm.drawWholeNorthMap()
+    #fm.drawWholeMap()
+    #fm.drawPointsHistograms2()    
+    fm.drawTiePointsHistograms()
     #fm.drawWholeSouthMap()
+    #fm.drawWholeNorthMap()
+    
+    
     
     
     

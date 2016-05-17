@@ -20,6 +20,8 @@ class L3Bean:
         
       self._sicsum = 0
       self._sics = []
+      
+      
     
     def add(self, bean):
       self._gg  = bean.getGG() 
@@ -37,6 +39,9 @@ class L3Bean:
         
     def getLon(self):
         return self._lon
+        
+    def isNorth(self):
+        return (self._lat>0)
         
     #def __eq__(self, other):
     #    return self._gg == other.getGG()

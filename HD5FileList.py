@@ -19,9 +19,6 @@ from mpl_toolkits.basemap import Basemap
 import matplotlib.pyplot as plt
 import numpy as np
 
-import numpy as np
-import pylab as P
-
 from mwr_tie_points_finder import print_tie_points
 from L2Bean import L2Bean
 
@@ -100,8 +97,7 @@ class HD5FileList(list):
     #Dibuja histrogramas a partir de los datos tomados de los archivo
         
         
-    def drawTiePointsHistrogram(self):
-        pass
+
     
     def plot_histogram(self, x, y, title):
         
@@ -120,21 +116,22 @@ class HD5FileList(list):
         plt.show()
         fig = plt.gcf()
         fig.savefig(title + ".png")
+        plt.close()
         #plt.clf()
         
     def plot_points(self, x, y, title):      
-        
+        plt.figure()
         plt.title(title)
         #plt.plot([x[0], y[0]], [x[1], y[1]] ,'o',label=1)
         
-      
+        print "x,y", len(x), len(y)
         
         plt.plot(x, y,'o',label=1)
         plt.xlabel("DP")
         plt.ylabel("DG")
         plt.legend(loc='best')
         plt.show()
-        
+        #plt.clf()
         #sys.exit()
 
     
@@ -176,7 +173,7 @@ class HD5FileList(list):
         AgOddSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()<0 and elem.getGG()!=-99] 
         minv = min(len(ApOddSouth), len(AgOddSouth))
         self._draw("Densigrama sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
-
+    
         
         ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
@@ -192,38 +189,12 @@ class HD5FileList(list):
         
         ##realizamos todos los agrupamientos para estar listo segun consigna indique        
         
+        print "Drawing histograms"
         icePs = []
         iceGs = []
         seaPs = []
         seaGs = []
-        """
-        icePsEvenNorth = []
-        iceGsEvenNorth = []      
-        seaPsEvenNorth = []
-        seaGsEvenNorth = []    
-        
-        icePsOddNorth = []
-        iceGsOddNorth = []      
-        seaPsOddNorth = []
-        seaGsOddNorth = [] 
-        
-        
-        icePsEvenSouth = []
-        iceGsEvenSouth = []      
-        seaPsEvenSouth = []
-        seaGsEvenSouth = []    
-        
-        icePsOddSouth = []
-        iceGsOddSouth = []      
-        seaPsOddSouth = []
-        seaGsOddSouth = [] 
-        
-        tiepoints = []
-        """
-        
-        
-        #iceCount, IceP, IceG, seaCount, SeaP, SeaG = mwr_tie_points_finder.print_tie_points(self.getDGAsArray(), self.getDPAsArray())
-        
+      
         
         
         ap = []
@@ -242,7 +213,8 @@ class HD5FileList(list):
                 ag.append(IceG)
                 ag.append(SeaG)
                 
-            
+        
+        print "Drawing north Odd"
         self.plot_points(ap, ag, "Points Norte, impar")    
         
         ap = []
@@ -263,7 +235,7 @@ class HD5FileList(list):
                 ag.append(SeaG)
                 
             
-        print "imprimiendo norte par"   
+        
         self.plot_points(ap, ag, "Points Norte, par")   
         #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)     
         
@@ -312,8 +284,124 @@ class HD5FileList(list):
         #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)
         
     
-    def getMedsValues(self):
-        pass
+    def drawWholeMap(self):
+        #Se usa diccionario tratando de mejorar tiempos
+        l3beanDict = dict()
+        print "Arrancando lista final"
+        for element in self:
+            b = l3beanDict.get(str(element.getGG()), None)
+            if b==None:
+                b = L3Bean()
+                b.add(element)
+                l3beanDict[str(element.getGG())] = b
+            else:
+                b.add(element)
+
+        
+        ms = Basemap(projection='kav7',lon_0=0,resolution=None)
+        ms.drawcoastlines()
+        ms.drawcountries()
+        ms.fillcontinents(color='grey')
+        ms.drawmapboundary(fill_color='aqua')
+        
+        
+        #Al no existir o no conocer la posibilidad de crear listas con tipos
+        #Generics(C#-Java)/Templates(C++) no es clara la mejor solucion
+        #si crear listas propias o realizar los filtros como se indica
+        #sics = [elem.getMedSic for elem in l3beanlist if (True) ]    
+            
+        l3beanlist = list(l3beanDict.values())
+        
+        
+        
+        sics = [elem.getMedSic() for elem in l3beanlist]
+        lats = [elem.getLat() for elem in l3beanlist]
+        lons = [elem.getLon() for elem in l3beanlist]
+        
+        
+        print "tam sics hammer", len(sics)
+        x1 = []
+        y1 = []
+        x1,y1= ms(lons, lats)
+        
+        #points = ms.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
+        ms.hexbin(x1,y1, C=sics, gridsize=len(sics)/500,  cmap=plt.cm.jet) 
+        
+        ms.drawmeridians(np.arange(0, 360, 30))
+        ms.drawparallels(np.arange(-90, 90, 30))
+        #print "fin scatter"     
+       
+        #plt.gcf().set_size_inches(18,10)
+        #plt.show()    
+        del sics
+        del lats
+        del lons
+        
+        del ms
+        del l3beanDict
+        
+        
+    def drawWholeSouthMap(self):
+       
+        #Se usa diccionario tratando de mejorar tiempos
+        l3beanDict = dict()
+        print "Arrancando lista final"
+        for element in self:
+            
+            b = l3beanDict.get(str(element.getGG()), None)
+            
+            if b==None:
+                
+                b = L3Bean()
+                b.add(element)
+                l3beanDict[str(element.getGG())] = b
+                
+            else:
+                
+                b.add(element)
+
+        
+        ms = Basemap(projection='spstere',boundinglat=-50,lon_0=270,resolution='h', round=True)    
+        ms.drawcoastlines()
+        ms.drawcountries()
+        ms.fillcontinents(color='grey')
+        ms.drawmapboundary(fill_color='aqua')
+        
+        
+        #Al no existir o no conocer la posibilidad de crear listas con tipos
+        #Generics(C#-Java)/Templates(C++) no es clara la mejor solucion
+        #si crear listas propias o realizar los filtros como se indica
+        #sics = [elem.getMedSic for elem in l3beanlist if (True) ]    
+            
+        l3beanlist = list(l3beanDict.values())
+        
+        
+        
+        sics = [elem.getMedSic() for elem in l3beanlist if not elem.isNorth()]
+        lats = [elem.getLat() for elem in l3beanlist if not elem.isNorth()]
+        lons = [elem.getLon() for elem in l3beanlist if not elem.isNorth()]
+        
+        
+        print "tam sics sur", len(sics)
+        x1 = []
+        y1 = []
+        x1,y1= ms(lons, lats)
+        
+        ms.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
+         
+        
+        ms.drawmeridians(np.arange(0, 360, 30))
+        ms.drawparallels(np.arange(-90, 90, 30))
+        #print "fin scatter"     
+       
+        #plt.gcf().set_size_inches(18,10)
+        #plt.show()    
+        del sics
+        del lats
+        del lons
+        #points.remove()
+        del ms
+        del l3beanDict
         
         
         
@@ -325,9 +413,7 @@ class HD5FileList(list):
         for element in self:
             
             b = l3beanDict.get(str(element.getGG()), None)
-            
             if b==None:
-                
                 b = L3Bean()
                 b.add(element)
                 l3beanDict[str(element.getGG())] = b
@@ -348,16 +434,7 @@ class HD5FileList(list):
         my_map.fillcontinents(color='grey')
         my_map.drawmapboundary(fill_color='aqua')
         
-        #print "tamano:", len(self)
-        #sics =[]
-        #lats = []
-        #lons = []
         
-        
-
-        
-                        
-            
         #Al no existir o no conocer la posibilidad de crear listas con tipos
         #Generics(C#-Java)/Templates(C++) no es clara la mejor solucion
         #si crear listas propias o realizar los filtros como se indica
@@ -365,38 +442,33 @@ class HD5FileList(list):
             
         l3beanlist = list(l3beanDict.values())
         
-        print "tam de lista", len(l3beanlist)
-        
-        sics = [elem.getMedSic() for elem in l3beanlist]
-        lats = [elem.getLat() for elem in l3beanlist]
-        lons = [elem.getLon() for elem in l3beanlist]
         
         
-        #npsics = np.array(sics)
-        #nplats = np.array(lats)
-        #nplons = np.array(lons)
-        #print "tam de np", len(sics), len(lats), len(nplons)
+        sics = [elem.getMedSic() for elem in l3beanlist if elem.isNorth()]
+        lats = [elem.getLat() for elem in l3beanlist if elem.isNorth()]
+        lons = [elem.getLon() for elem in l3beanlist if elem.isNorth()]
         
-        #plt.figure()
-        #print "lats, lons", lats, lons        
+        print "tam sics norte", len(sics)
+        x1 = []
+        y1 = []
+       
         x1,y1= my_map(lons, lats)
         
+        points = my_map.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
         
-        #print "x, y, sic", x1, y1, sics
-        #print "Cantidad final de sics->", len(npsics)
-        #my_map.hexbin(x1,y1, C=npsics, gridsize=len(npsics)/1, cmap=plt.cm.jet)
-        my_map.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
          
         my_map.drawmeridians(np.arange(0, 360, 30))
         my_map.drawparallels(np.arange(-90, 90, 30))
+        #print "fin scatter"     
         
-   
         #plt.gcf().set_size_inches(18,10)
         #plt.show()    
         del sics
         del lats
         del lons
-        
+        points.remove()
+        del my_map
+        del l3beanDict
         
     def saveToFile(self, filename):
         ##realizamos todos los agrupamientos para estar listo segun consigna indique        

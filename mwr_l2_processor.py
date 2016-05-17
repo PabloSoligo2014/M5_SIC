@@ -486,11 +486,45 @@ if __name__ == "__main__":
    
     l1b_file = sys.argv[1]   
     
-    #h5fList = HD5FileList([])
     
-    for fs in os.listdir("./MWR_pasadas/"):        
-        if fs.endswith("tar.gz") and fs.startswith("EO"):
-            l1b_file = fs  
+    #si el parametro segundo es -f trabaja por folder, sino modo tradicional
+    if len(sys.argv)<2:
+        print "Faltan argumentos"
+    else:
+        if sys.argv[1]=="-f":
+            #Vamos por folder
+            folder = sys.argv[2] #"./MWR_pasadas/"
+            for fs in os.listdir(folder):        
+                if fs.endswith("tar.gz") and fs.startswith("EO"):
+                    l1b_file = fs  
+                    print "procesando...", l1b_file
+                    print l1b_file
+                    
+                    #clear = lambda: os.system('cls')
+                    #clear()   
+                    #os.system("clear")
+                    #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
+                    pf = passfile(l1b_file, [1,3,5])
+                    mlist, beandic = processPassFile(pf)
+                    #beandic.saveToFile("test.h5")
+                    #mlist.drawHk()
+                    #SIC, lat, lon, gg, dp, dg, Surface_type 
+                    l1fn = pf.getSimpleFileName()
+                    l2fn = l1fn.replace("L1B", "L2B")
+                    h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
+                
+                    #h5f.getMeasureList().drawHkSPole()
+                    #h5f.getMeasureList().drawHkNPole()
+                    #h5f.getMeasureList().drawNPole()
+                    h5f.save(False)
+                    #h5fList.append(h5f)
+                    #h5f.save()
+                    
+                    print "Clean filename->",pf.getCleanFileName()
+                    #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
+        else:
+            #vamos por archivo
+            l1b_file = sys.argv[1]   
             print "procesando...", l1b_file
             print l1b_file
             
@@ -511,51 +545,14 @@ if __name__ == "__main__":
             #h5f.getMeasureList().drawHkNPole()
             #h5f.getMeasureList().drawNPole()
             h5f.save(False)
-            #h5fList.append(h5f)
+            
             #h5f.save()
             
             print "Clean filename->",pf.getCleanFileName()
             #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
         
-    
+        
+        
     print "Final"
         
-    
-    #Todos los archivos
-    
-    """
-    for fi in range(1, len(sys.argv)):
-        #l1b_file = mfile
-        l1b_file = sys.argv[fi]   
-        print "procesando...", l1b_file
-        print l1b_file
-        
-        #clear = lambda: os.system('cls')
-        #clear()   
-        #os.system("clear")
-        #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
-        pf = passfile(l1b_file, [1,3,5])
-        mlist, beandic = processPassFile(pf)
-        #beandic.saveToFile("test.h5")
-        #mlist.drawHk()
-        #SIC, lat, lon, gg, dp, dg, Surface_type 
-        l1fn = pf.getSimpleFileName()
-        l2fn = l1fn.replace("L1B", "L2B")
-        h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
-    
-        #h5f.getMeasureList().drawHkSPole()
-        #h5f.getMeasureList().drawHkNPole()
-        #h5f.getMeasureList().drawNPole()
-        h5f.save(False)
-        h5fList.append(h5f)
-        #h5f.save()
-        
-        print "Clean filename->",pf.getCleanFileName()
-        #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
-    
-    """
-      
-    #h5fList.drawNPole()
-    #h5fList.drawHistograms()
-    
     
