@@ -119,17 +119,22 @@ class HD5FileList(list):
         plt.close()
         #plt.clf()
         
-    def plot_points(self, x, y, title):      
+    def plot_points(self, x, y, title, save=True, folder="./"):      
         plt.figure()
         plt.title(title)
         #plt.plot([x[0], y[0]], [x[1], y[1]] ,'o',label=1)
         
-        print "x,y", len(x), len(y)
+        #print "x,y", len(x), len(y)
         
         plt.plot(x, y,'o',label=1)
         plt.xlabel("DP")
         plt.ylabel("DG")
         plt.legend(loc='best')
+        
+        
+        if (save):
+            plt.savefig(folder+title)
+            
         plt.show()
         #plt.clf()
         #sys.exit()
@@ -156,6 +161,7 @@ class HD5FileList(list):
         ApEvenSouth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
         AgEvenSouth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) == 0 and elem.getLat()<0 and elem.getGG()!=-99] 
         
+        
         minv = min(len(ApEvenSouth), len(AgEvenSouth))
         #print "histo con problemas", ApEvenSouth, AgEvenSouth
         self._draw("Densigrama sur/par", ApEvenSouth[0:minv], AgEvenSouth[0:minv], 200)
@@ -174,6 +180,7 @@ class HD5FileList(list):
         minv = min(len(ApOddSouth), len(AgOddSouth))
         self._draw("Densigrama sur/impar", ApOddSouth[0:minv], AgOddSouth[0:minv], 200)
     
+        
         
         ApOddNorth = [elem.getDP() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
         AgOddNorth = [elem.getDG() for elem in self if ( (elem.getSurface() in (1,5))  and  (elem.getBean()+1) % 2) != 0 and elem.getLat()>0 and elem.getGG()!=-99] 
@@ -215,7 +222,7 @@ class HD5FileList(list):
                 
         
         print "Drawing north Odd"
-        self.plot_points(ap, ag, "Points Norte, impar")    
+        self.plot_points(ap, ag, "Points Norte, impar", True, "./p2output/")    
         
         ap = []
         ag = []
@@ -236,7 +243,7 @@ class HD5FileList(list):
                 
             
         
-        self.plot_points(ap, ag, "Points Norte, par")   
+        self.plot_points(ap, ag, "Points Norte, par", True, "./p2output/")    
         #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)     
         
         
@@ -258,7 +265,7 @@ class HD5FileList(list):
                 
             
         
-        self.plot_points(ap, ag, "Points sur, impar")   
+        self.plot_points(ap, ag, "Points sur, impar", True, "./p2output/")    
         
         
         
@@ -280,68 +287,43 @@ class HD5FileList(list):
                 
             
         
-        self.plot_points(ap, ag, "Points sur, par") 
+        self.plot_points(ap, ag, "Points sur, par", True, "./p2output/")    
         #self._draw("Tie points South Odd", iceGsOddSouth, icePsOddSouth, 100)
         
-    
-    def drawWholeMap(self):
-        #Se usa diccionario tratando de mejorar tiempos
+        
+    def saveH5L3(self, filename):
+        
+        
+        #Agrupamiento
         l3beanDict = dict()
         print "Arrancando lista final"
         for element in self:
+            
             b = l3beanDict.get(str(element.getGG()), None)
+            
             if b==None:
+                
                 b = L3Bean()
                 b.add(element)
                 l3beanDict[str(element.getGG())] = b
+                
             else:
+                
                 b.add(element)
-
         
-        ms = Basemap(projection='kav7',lon_0=0,resolution=None)
-        ms.drawcoastlines()
-        ms.drawcountries()
-        ms.fillcontinents(color='grey')
-        ms.drawmapboundary(fill_color='aqua')
+        f = h5py.File(filename, "w")
         
-        
-        #Al no existir o no conocer la posibilidad de crear listas con tipos
-        #Generics(C#-Java)/Templates(C++) no es clara la mejor solucion
-        #si crear listas propias o realizar los filtros como se indica
-        #sics = [elem.getMedSic for elem in l3beanlist if (True) ]    
-            
         l3beanlist = list(l3beanDict.values())
+        grp = f.create_group("L3 Final")
+        grp.create_dataset("sic",data=[elem.getMedSic() for elem in l3beanlist])
+        grp.create_dataset("lat",data=[elem.getLat() for elem in l3beanlist])
+        grp.create_dataset("lon",data=[elem.getLon() for elem in l3beanlist])
+        grp.create_dataset("gg",data=[elem.getGG() for elem in l3beanlist])
+                           
+        f.flush()
+        f.close()
         
-        
-        
-        sics = [elem.getMedSic() for elem in l3beanlist]
-        lats = [elem.getLat() for elem in l3beanlist]
-        lons = [elem.getLon() for elem in l3beanlist]
-        
-        
-        print "tam sics hammer", len(sics)
-        x1 = []
-        y1 = []
-        x1,y1= ms(lons, lats)
-        
-        #points = ms.scatter(x1, y1, c=sics, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
-        ms.hexbin(x1,y1, C=sics, gridsize=len(sics)/500,  cmap=plt.cm.jet) 
-        
-        ms.drawmeridians(np.arange(0, 360, 30))
-        ms.drawparallels(np.arange(-90, 90, 30))
-        #print "fin scatter"     
-       
-        #plt.gcf().set_size_inches(18,10)
-        #plt.show()    
-        del sics
-        del lats
-        del lons
-        
-        del ms
-        del l3beanDict
-        
-        
-    def drawWholeSouthMap(self):
+    def drawWholeSouthMap(self, save=True, folder="./"):
        
         #Se usa diccionario tratando de mejorar tiempos
         l3beanDict = dict()
@@ -361,6 +343,7 @@ class HD5FileList(list):
                 b.add(element)
 
         
+        plt.figure()
         ms = Basemap(projection='spstere',boundinglat=-50,lon_0=270,resolution='h', round=True)    
         ms.drawcoastlines()
         ms.drawcountries()
@@ -395,7 +378,10 @@ class HD5FileList(list):
         #print "fin scatter"     
        
         #plt.gcf().set_size_inches(18,10)
-        #plt.show()    
+        if(save):
+           
+            plt.savefig(folder+"WholeSouth.png")
+        plt.show()    
         del sics
         del lats
         del lons
@@ -405,7 +391,9 @@ class HD5FileList(list):
         
         
         
-    def drawWholeNorthMap(self):
+        
+        
+    def drawWholeNorthMap(self, save=True, folder="./"):
        
         #Se usa diccionario tratando de mejorar tiempos
         l3beanDict = dict()
@@ -426,6 +414,7 @@ class HD5FileList(list):
         print "tamano de lista final", len(l3beanDict)
         
         
+        plt.figure()
         
         
         my_map = Basemap(projection='npstere',boundinglat=50,lon_0=270,resolution='h', round=True)    
@@ -462,7 +451,12 @@ class HD5FileList(list):
         #print "fin scatter"     
         
         #plt.gcf().set_size_inches(18,10)
-        #plt.show()    
+        
+        if(save):
+           
+            plt.savefig(folder+"WholeNorth.png")
+        plt.show()    
+        
         del sics
         del lats
         del lons
@@ -694,6 +688,9 @@ class HD5FileList(list):
         del sic    
         del x1
         del y1
+        
+
+        
 
 
 

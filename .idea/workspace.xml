@@ -2,10 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58cc5cb4-8f7d-49e9-9dad-85709ec08566" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Aux_CompleteFolder.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HD5FileList.py" afterPath="$PROJECT_DIR$/HD5FileList.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/L3Bean.py" afterPath="$PROJECT_DIR$/L3Bean.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MeasureList.py" afterPath="$PROJECT_DIR$/MeasureList.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dgdp.txt" afterPath="$PROJECT_DIR$/dgdp.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hd5fileManager.py" afterPath="$PROJECT_DIR$/hd5fileManager.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_l2_processor.py" afterPath="$PROJECT_DIR$/mwr_l2_processor.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_sic_calibration.py" afterPath="$PROJECT_DIR$/mwr_sic_calibration.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_tie_points_finder.py" afterPath="$PROJECT_DIR$/mwr_tie_points_finder.py" />
     </list>
     <ignored path="M5_SIC.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -37,7 +43,7 @@
       <file leaf-file-name="mwr_l2_processor.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mwr_l2_processor.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
+            <state relative-caret-position="0">
               <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding />
             </state>
@@ -56,23 +62,23 @@
                 <node x="1179.0" y="835.0">MultiBandBeanDict.MultiBandBeanDict</node>
                 <node x="850.4988465974627" y="1388.8471741637832">Bean.Bean</node>
                 <node x="504.4382929642445" y="1843.2370242214533">mwr_l2_processor.passfile</node>
-                <node x="-458.53806228373685" y="855.046712802768">HD5FileList.HD5FileList</node>
-                <node x="-556.7243367935407" y="1193.2110726643593">hd5fileManager.hd5fileManager</node>
+                <node x="-467.03806228373685" y="792.046712802768">HD5FileList.HD5FileList</node>
+                <node x="-595.051573241828" y="1351.1192868313033">hd5fileManager.hd5fileManager</node>
                 <node x="924.0" y="0.0">dict</node>
                 <node x="0.0" y="0.0">list</node>
                 <node x="246.68281430219145" y="930.978085351788">MeasureList.MeasureList</node>
                 <node x="782.6862745098041" y="1024.3904267589385">HD5L2Files.HD5L2Files</node>
-                <node x="-52.53748558246832" y="1827.4198385236446">L2Bean.L2Bean</node>
+                <node x="-780.3027000819694" y="1562.7469086932488">L2Bean.L2Bean</node>
               </nodes>
               <notes />
               <edges>
-                <edge source="MeasureList.MeasureList" target="list">
-                  <point x="0.0" y="-130.0" />
-                  <point x="0.0" y="382.0" />
-                </edge>
                 <edge source="HD5FileList.HD5FileList" target="list">
                   <point x="0.0" y="0.0" />
                   <point x="0.0" y="0.0" />
+                </edge>
+                <edge source="MeasureList.MeasureList" target="list">
+                  <point x="0.0" y="-130.0" />
+                  <point x="0.0" y="382.0" />
                 </edge>
                 <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
                   <point x="0.0" y="-77.5" />
@@ -83,9 +89,9 @@
                   <point x="0.0" y="0.0" />
                 </edge>
               </edges>
-              <settings layout="Hierarchic Group" zoom="0.5522776572668113" x="-67.43597800471332" y="386.5640219952867" />
+              <settings layout="Hierarchic Group" zoom="0.6522776572668113" x="324.94146990355836" y="527.9414699035583" />
               <SelectedNodes>
-                <node>HD5L2Files.HD5L2Files</node>
+                <node>L2Bean.L2Bean</node>
               </SelectedNodes>
               <Categories>
                 <Category>Methods</Category>
@@ -94,11 +100,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="MultibandBean.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/MultibandBean.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-360">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="HD5FileList.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HD5FileList.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="287">
-              <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
+              <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -111,52 +127,61 @@
               <ID>Python</ID>
               <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
               <nodes>
-                <node x="1462.252997601917" y="1053.368105515588">MultibandBean.MultibandBean</node>
-                <node x="753.1678657074342" y="1774.3345323741007">Measure.Measure</node>
-                <node x="1513.0" y="857.0">MultiBandBeanDict.MultiBandBeanDict</node>
-                <node x="1540.8740389271516" y="1817.2866407607644">Bean.Bean</node>
-                <node x="-739.0928393996076" y="1044.5187596576657">BandBeanList.BandBeanList</node>
-                <node x="-808.2231044036648" y="1561.3981626362386">HD5FileList.HD5FileList</node>
-                <node x="1677.9002824961424" y="2541.755193383591">hd5fileManager.hd5fileManager</node>
-                <node x="1248.0" y="0.0">dict</node>
-                <node x="63.762547801147264" y="-23.829469407265833">list</node>
-                <node x="885.1130241080739" y="1087.168130393762">MeasureList.MeasureList</node>
-                <node x="-135.96722898927396" y="1047.573593133142">HD5L2Files.HD5L2Files</node>
-                <node x="-777.0" y="2844.0">L2Bean.L2Bean</node>
+                <node x="373.8671286227308" y="557.5489248959406">HD5L2Files.HD5L2Files</node>
+                <node x="4.988593910074769" y="1843.2370242214533">mwr_l2_processor.passfile</node>
+                <node x="1127.4694754944112" y="636.8056749785039">MultiBandBeanDict.MultiBandBeanDict</node>
+                <node x="-21.3887566558667" y="1108.7405290577108">MultibandBean.MultibandBean</node>
+                <node x="-1008.5564021774808" y="1846.4808875348226">L2Bean.L2Bean</node>
+                <node x="896.2527944969906" y="-495.4858125537401">dict</node>
+                <node x="-855.9740038142613" y="646.7191117709539">HD5FileList.HD5FileList</node>
+                <node x="-1016.5351708434118" y="1343.8387596806965">hd5fileManager.hd5fileManager</node>
+                <node x="-1424.1856293779451" y="579.5838463148148">MeasureList.MeasureList</node>
+                <node x="36.1111111111112" y="740.4444444444445">BandBeanList.BandBeanList</node>
+                <node x="885.4248121381979" y="1839.249134948097">Measure.Measure</node>
+                <node x="23.3333333333336" y="2156.0000000000005">L3Bean.L3Bean</node>
+                <node x="-955.296646603611" y="-487.5580395528803">list</node>
+                <node x="1013.0181931150894" y="1103.4473461328287">Bean.Bean</node>
               </nodes>
               <notes />
               <edges>
+                <edge source="HD5FileList.HD5FileList" target="list">
+                  <point x="0.0" y="0.0" />
+                  <point x="0.0" y="0.0" />
+                </edge>
                 <edge source="MeasureList.MeasureList" target="list">
                   <point x="0.0" y="-130.0" />
-                  <point x="955.7022578877629" y="943.076556059168" />
-                  <point x="867.0527577937651" y="823.5839328537171" />
-                  <point x="299.6666666666668" y="393.0" />
-                </edge>
-                <edge source="HD5FileList.HD5FileList" target="list">
-                  <point x="0.0" y="-246.0" />
-                  <point x="5.6843418860808015E-14" y="393.0" />
+                  <point x="0.0" y="382.0" />
                 </edge>
                 <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
                   <point x="0.0" y="-77.5" />
-                  <point x="0.0" y="403.5" />
+                  <point x="0.0" y="392.5" />
                 </edge>
                 <edge source="HD5L2Files.HD5L2Files" target="list">
-                  <point x="0.0" y="-36.0" />
-                  <point x="214.92344766634187" y="863.7851470257827" />
-                  <point x="209.83333333333326" y="811.0" />
-                  <point x="-299.6666666666667" y="393.0" />
+                  <point x="0.0" y="0.0" />
+                  <point x="0.0" y="0.0" />
                 </edge>
                 <edge source="BandBeanList.BandBeanList" target="list">
                   <point x="0.0" y="0.0" />
                   <point x="0.0" y="0.0" />
                 </edge>
               </edges>
-              <settings layout="Hierarchic Group" zoom="0.39733206288708944" x="940.0833333333317" y="1514.091645852799" />
-              <SelectedNodes />
+              <settings layout="Hierarchic Group" zoom="1.6" x="234.2932692307714" y="2217.7638888888882" />
+              <SelectedNodes>
+                <node>L3Bean.L3Bean</node>
+              </SelectedNodes>
               <Categories>
                 <Category>Methods</Category>
-                <Category>Fields</Category>
               </Categories>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BandBeanList.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BandBeanList.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="18" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -216,6 +241,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -250,12 +277,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Diagrams" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Diagrams/WholeDiagram.png" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
@@ -496,26 +521,26 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="24" width="1922" height="1033" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.185836" sideWeight="0.46396396" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25292864" sideWeight="0.45945945" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960597" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20127796" sideWeight="0.46846846" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.185836" sideWeight="0.536036" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25292864" sideWeight="0.5405405" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25559106" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -538,6 +563,124 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/mwr_l2_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://Python/#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>Python</ID>
+          <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
+          <nodes>
+            <node x="-41.20818915801624" y="1390.1764705882351">MultibandBean.MultibandBean</node>
+            <node x="1004.3414071510956" y="1839.249134948097">Measure.Measure</node>
+            <node x="1179.0" y="835.0">MultiBandBeanDict.MultiBandBeanDict</node>
+            <node x="850.4988465974627" y="1388.8471741637832">Bean.Bean</node>
+            <node x="504.4382929642445" y="1843.2370242214533">mwr_l2_processor.passfile</node>
+            <node x="-467.03806228373685" y="792.046712802768">HD5FileList.HD5FileList</node>
+            <node x="-595.051573241828" y="1351.1192868313033">hd5fileManager.hd5fileManager</node>
+            <node x="924.0" y="0.0">dict</node>
+            <node x="0.0" y="0.0">list</node>
+            <node x="246.68281430219145" y="930.978085351788">MeasureList.MeasureList</node>
+            <node x="782.6862745098041" y="1024.3904267589385">HD5L2Files.HD5L2Files</node>
+            <node x="-780.3027000819694" y="1562.7469086932488">L2Bean.L2Bean</node>
+          </nodes>
+          <notes />
+          <edges>
+            <edge source="HD5FileList.HD5FileList" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
+            <edge source="MeasureList.MeasureList" target="list">
+              <point x="0.0" y="-130.0" />
+              <point x="0.0" y="382.0" />
+            </edge>
+            <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
+              <point x="0.0" y="-77.5" />
+              <point x="0.0" y="392.5" />
+            </edge>
+            <edge source="HD5L2Files.HD5L2Files" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="0.6522776572668113" x="324.94146990355836" y="527.9414699035583" />
+          <SelectedNodes>
+            <node>L2Bean.L2Bean</node>
+          </SelectedNodes>
+          <Categories>
+            <Category>Methods</Category>
+          </Categories>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HD5FileList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Diagrams/CompleteDiagram.uml">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>Python</ID>
+          <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
+          <nodes>
+            <node x="373.8671286227308" y="557.5489248959406">HD5L2Files.HD5L2Files</node>
+            <node x="4.988593910074769" y="1843.2370242214533">mwr_l2_processor.passfile</node>
+            <node x="1127.4694754944112" y="636.8056749785039">MultiBandBeanDict.MultiBandBeanDict</node>
+            <node x="-21.3887566558667" y="1108.7405290577108">MultibandBean.MultibandBean</node>
+            <node x="-1008.5564021774808" y="1846.4808875348226">L2Bean.L2Bean</node>
+            <node x="896.2527944969906" y="-495.4858125537401">dict</node>
+            <node x="-855.9740038142613" y="646.7191117709539">HD5FileList.HD5FileList</node>
+            <node x="-1016.5351708434118" y="1343.8387596806965">hd5fileManager.hd5fileManager</node>
+            <node x="-1424.1856293779451" y="579.5838463148148">MeasureList.MeasureList</node>
+            <node x="36.1111111111112" y="740.4444444444445">BandBeanList.BandBeanList</node>
+            <node x="885.4248121381979" y="1839.249134948097">Measure.Measure</node>
+            <node x="23.3333333333336" y="2156.0000000000005">L3Bean.L3Bean</node>
+            <node x="-955.296646603611" y="-487.5580395528803">list</node>
+            <node x="1013.0181931150894" y="1103.4473461328287">Bean.Bean</node>
+          </nodes>
+          <notes />
+          <edges>
+            <edge source="HD5FileList.HD5FileList" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
+            <edge source="MeasureList.MeasureList" target="list">
+              <point x="0.0" y="-130.0" />
+              <point x="0.0" y="382.0" />
+            </edge>
+            <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
+              <point x="0.0" y="-77.5" />
+              <point x="0.0" y="392.5" />
+            </edge>
+            <edge source="HD5L2Files.HD5L2Files" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
+            <edge source="BandBeanList.BandBeanList" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="1.6" x="234.2932692307714" y="2217.7638888888882" />
+          <SelectedNodes>
+            <node>L3Bean.L3Bean</node>
+          </SelectedNodes>
+          <Categories>
+            <Category>Methods</Category>
+          </Categories>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mwr_l2_processor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -677,6 +820,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mwr_l2_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Diagrams/WholeDiagram.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BandBeanList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HD5FileList.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="uml://Python/#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py">
       <provider selected="true" editor-type-id="UmlEditorProvider">
         <state>
@@ -688,23 +860,23 @@
             <node x="1179.0" y="835.0">MultiBandBeanDict.MultiBandBeanDict</node>
             <node x="850.4988465974627" y="1388.8471741637832">Bean.Bean</node>
             <node x="504.4382929642445" y="1843.2370242214533">mwr_l2_processor.passfile</node>
-            <node x="-458.53806228373685" y="855.046712802768">HD5FileList.HD5FileList</node>
-            <node x="-556.7243367935407" y="1193.2110726643593">hd5fileManager.hd5fileManager</node>
+            <node x="-467.03806228373685" y="792.046712802768">HD5FileList.HD5FileList</node>
+            <node x="-595.051573241828" y="1351.1192868313033">hd5fileManager.hd5fileManager</node>
             <node x="924.0" y="0.0">dict</node>
             <node x="0.0" y="0.0">list</node>
             <node x="246.68281430219145" y="930.978085351788">MeasureList.MeasureList</node>
             <node x="782.6862745098041" y="1024.3904267589385">HD5L2Files.HD5L2Files</node>
-            <node x="-52.53748558246832" y="1827.4198385236446">L2Bean.L2Bean</node>
+            <node x="-780.3027000819694" y="1562.7469086932488">L2Bean.L2Bean</node>
           </nodes>
           <notes />
           <edges>
-            <edge source="MeasureList.MeasureList" target="list">
-              <point x="0.0" y="-130.0" />
-              <point x="0.0" y="382.0" />
-            </edge>
             <edge source="HD5FileList.HD5FileList" target="list">
               <point x="0.0" y="0.0" />
               <point x="0.0" y="0.0" />
+            </edge>
+            <edge source="MeasureList.MeasureList" target="list">
+              <point x="0.0" y="-130.0" />
+              <point x="0.0" y="382.0" />
             </edge>
             <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
               <point x="0.0" y="-77.5" />
@@ -715,9 +887,9 @@
               <point x="0.0" y="0.0" />
             </edge>
           </edges>
-          <settings layout="Hierarchic Group" zoom="0.5522776572668113" x="-67.43597800471332" y="386.5640219952867" />
+          <settings layout="Hierarchic Group" zoom="0.6522776572668113" x="324.94146990355836" y="527.9414699035583" />
           <SelectedNodes>
-            <node>HD5L2Files.HD5L2Files</node>
+            <node>L2Bean.L2Bean</node>
           </SelectedNodes>
           <Categories>
             <Category>Methods</Category>
@@ -725,18 +897,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mwr_l2_processor.py">
+    <entry file="file://$PROJECT_DIR$/MultibandBean.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HD5FileList.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="40" column="6" selection-start-line="40" selection-start-column="6" selection-end-line="40" selection-end-column="6" />
+        <state relative-caret-position="-360">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -747,51 +911,50 @@
           <ID>Python</ID>
           <OriginalElement>#/home/ubuntumate/git/M5_SIC/mwr_l2_processor.py</OriginalElement>
           <nodes>
-            <node x="1462.252997601917" y="1053.368105515588">MultibandBean.MultibandBean</node>
-            <node x="753.1678657074342" y="1774.3345323741007">Measure.Measure</node>
-            <node x="1513.0" y="857.0">MultiBandBeanDict.MultiBandBeanDict</node>
-            <node x="1540.8740389271516" y="1817.2866407607644">Bean.Bean</node>
-            <node x="-739.0928393996076" y="1044.5187596576657">BandBeanList.BandBeanList</node>
-            <node x="-808.2231044036648" y="1561.3981626362386">HD5FileList.HD5FileList</node>
-            <node x="1677.9002824961424" y="2541.755193383591">hd5fileManager.hd5fileManager</node>
-            <node x="1248.0" y="0.0">dict</node>
-            <node x="63.762547801147264" y="-23.829469407265833">list</node>
-            <node x="885.1130241080739" y="1087.168130393762">MeasureList.MeasureList</node>
-            <node x="-135.96722898927396" y="1047.573593133142">HD5L2Files.HD5L2Files</node>
-            <node x="-777.0" y="2844.0">L2Bean.L2Bean</node>
+            <node x="373.8671286227308" y="557.5489248959406">HD5L2Files.HD5L2Files</node>
+            <node x="4.988593910074769" y="1843.2370242214533">mwr_l2_processor.passfile</node>
+            <node x="1127.4694754944112" y="636.8056749785039">MultiBandBeanDict.MultiBandBeanDict</node>
+            <node x="-21.3887566558667" y="1108.7405290577108">MultibandBean.MultibandBean</node>
+            <node x="-1008.5564021774808" y="1846.4808875348226">L2Bean.L2Bean</node>
+            <node x="896.2527944969906" y="-495.4858125537401">dict</node>
+            <node x="-855.9740038142613" y="646.7191117709539">HD5FileList.HD5FileList</node>
+            <node x="-1016.5351708434118" y="1343.8387596806965">hd5fileManager.hd5fileManager</node>
+            <node x="-1424.1856293779451" y="579.5838463148148">MeasureList.MeasureList</node>
+            <node x="36.1111111111112" y="740.4444444444445">BandBeanList.BandBeanList</node>
+            <node x="885.4248121381979" y="1839.249134948097">Measure.Measure</node>
+            <node x="23.3333333333336" y="2156.0000000000005">L3Bean.L3Bean</node>
+            <node x="-955.296646603611" y="-487.5580395528803">list</node>
+            <node x="1013.0181931150894" y="1103.4473461328287">Bean.Bean</node>
           </nodes>
           <notes />
           <edges>
+            <edge source="HD5FileList.HD5FileList" target="list">
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
+            </edge>
             <edge source="MeasureList.MeasureList" target="list">
               <point x="0.0" y="-130.0" />
-              <point x="955.7022578877629" y="943.076556059168" />
-              <point x="867.0527577937651" y="823.5839328537171" />
-              <point x="299.6666666666668" y="393.0" />
-            </edge>
-            <edge source="HD5FileList.HD5FileList" target="list">
-              <point x="0.0" y="-246.0" />
-              <point x="5.6843418860808015E-14" y="393.0" />
+              <point x="0.0" y="382.0" />
             </edge>
             <edge source="MultiBandBeanDict.MultiBandBeanDict" target="dict">
               <point x="0.0" y="-77.5" />
-              <point x="0.0" y="403.5" />
+              <point x="0.0" y="392.5" />
             </edge>
             <edge source="HD5L2Files.HD5L2Files" target="list">
-              <point x="0.0" y="-36.0" />
-              <point x="214.92344766634187" y="863.7851470257827" />
-              <point x="209.83333333333326" y="811.0" />
-              <point x="-299.6666666666667" y="393.0" />
+              <point x="0.0" y="0.0" />
+              <point x="0.0" y="0.0" />
             </edge>
             <edge source="BandBeanList.BandBeanList" target="list">
               <point x="0.0" y="0.0" />
               <point x="0.0" y="0.0" />
             </edge>
           </edges>
-          <settings layout="Hierarchic Group" zoom="0.39733206288708944" x="940.0833333333317" y="1514.091645852799" />
-          <SelectedNodes />
+          <settings layout="Hierarchic Group" zoom="1.6" x="234.2932692307714" y="2217.7638888888882" />
+          <SelectedNodes>
+            <node>L3Bean.L3Bean</node>
+          </SelectedNodes>
           <Categories>
             <Category>Methods</Category>
-            <Category>Fields</Category>
           </Categories>
         </state>
       </provider>

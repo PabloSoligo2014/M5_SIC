@@ -20,9 +20,9 @@ from MultiBandBeanDict import MultiBandBeanDict
 
 from BandBeanList import BandBeanList
 from MultibandBean import MultibandBean
-from HD5FileList import HD5FileList
+#from HD5FileList import HD5FileList
 
-import glob, os
+
 
 #import gdal
 
@@ -242,13 +242,15 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
             indexAnterior = filtrados[i].gg_index
             tbsAcu = 0
             cont = 0
+            surfacef = None            
             while (indexActual==indexAnterior)and(i<len(filtrados)-1):
                 tbsAcu = tbsAcu + filtrados[i].getTbs()
                 cont = cont + 1
                 i = i + 1
                 indexActual = filtrados[i].gg_index
+                
                 if (surface in (1,5)) and (filtrados[i].surface==3):
-                    surface = filtrados[i].surface #3 tiene precedencia
+                    surfacef = filtrados[i].surface #3 tiene precedencia
                     
             
             indexAnterior = indexActual            
@@ -261,7 +263,11 @@ def promediados(band, dic, latitude, longitude, surface, value, grid_index, tam,
             promediado.gg_index   = filtrados[i-1].getGG()
             promediado.band       = filtrados[i-1].band
             promediado.bean       = filtrados[i-1].bean
-            promediado.surface    = filtrados[i-1].surface 
+            if surfacef!=None:
+                promediado.surface    = surfacef # filtrados[i-1].surface 
+            else:
+                promediado.surface    = filtrados[i-1].surface 
+                
             #print "ingreso promediado"
             promediados.append(promediado)
             
@@ -415,24 +421,9 @@ def processPassFile(pf):
         beans_ka_vFinal.append(list(bfkav))
         
     """    
-    #Ahora para cada bean quedan exactamente los mismos elementos
-   
-    #for i in range(0,8):
-    #    for x in range(0, len(beans_ka_hFinal[i])):
-    #        print "Valores, beans", i, beans_k_hFinal[i][x].getGG(), beans_ka_hFinal[i][x].getGG(), beans_ka_vFinal[i][x].getGG()
-    
-    
-    
     
     measureListB = MeasureList()
    
-    #bean_k_h = beans_k_hFinal[0]
-    #bean_ka_h = beans_ka_hFinal[0]
-    #print "control 2->", bean_k_h[0].getGG(), bean_ka_h[0].getGG(), bean_k_h[0].getTbs(), bean_ka_h[0].getTbs() 
-
-
-    
-    
     """
     for x in range(0, 8):
         bean_k_h    = beans_k_hFinal[x]
@@ -486,6 +477,11 @@ if __name__ == "__main__":
    
     l1b_file = sys.argv[1]   
     
+    if not os.path.exists("./output/"):
+        os.makedirs("./output/") 
+    
+    if not os.path.exists("./tmp/"):
+        os.makedirs("./tmp/") 
     
     #si el parametro segundo es -f trabaja por folder, sino modo tradicional
     if len(sys.argv)<2:
@@ -500,59 +496,39 @@ if __name__ == "__main__":
                     print "procesando...", l1b_file
                     print l1b_file
                     
-                    #clear = lambda: os.system('cls')
-                    #clear()   
-                    #os.system("clear")
+                   
                     #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
                     pf = passfile(l1b_file, [1,3,5])
                     mlist, beandic = processPassFile(pf)
-                    #beandic.saveToFile("test.h5")
-                    #mlist.drawHk()
-                    #SIC, lat, lon, gg, dp, dg, Surface_type 
                     l1fn = pf.getSimpleFileName()
                     l2fn = l1fn.replace("L1B", "L2B")
                     h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
-                
-                    #h5f.getMeasureList().drawHkSPole()
-                    #h5f.getMeasureList().drawHkNPole()
-                    #h5f.getMeasureList().drawNPole()
+                    #Con true elimina los archivos ya comprimidos
                     h5f.save(False)
-                    #h5fList.append(h5f)
-                    #h5f.save()
                     
-                    print "Clean filename->",pf.getCleanFileName()
-                    #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
+                    
         else:
             #vamos por archivo
             l1b_file = sys.argv[1]   
             print "procesando...", l1b_file
             print l1b_file
             
-            #clear = lambda: os.system('cls')
-            #clear()   
-            #os.system("clear")
+            os.system("clear")
             #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
             pf = passfile(l1b_file, [1,3,5])
             mlist, beandic = processPassFile(pf)
-            #beandic.saveToFile("test.h5")
-            #mlist.drawHk()
-            #SIC, lat, lon, gg, dp, dg, Surface_type 
             l1fn = pf.getSimpleFileName()
             l2fn = l1fn.replace("L1B", "L2B")
             h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
-        
-            #h5f.getMeasureList().drawHkSPole()
-            #h5f.getMeasureList().drawHkNPole()
-            #h5f.getMeasureList().drawNPole()
-            h5f.save(False)
+            h5f.save(True)
             
-            #h5f.save()
+           
             
-            print "Clean filename->",pf.getCleanFileName()
-            #mlist.drawHkPoles(pf.getCleanFileName()+"L2")
+            
+
         
         
         
-    print "Final"
+    print "Proceso finalizado"
         
     

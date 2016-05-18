@@ -191,6 +191,59 @@ class MeasureList(list):
             
             return f_name
             
+    def saveImageHkSPole(self, folder, filename):
+        
+        #print "Salvando, folder, filename:", folder, filename
+        if (len(self)!=0):
+            ms = Basemap(projection='spstere',boundinglat=-50,lon_0=180,resolution='h', round=True)
+            lat = []
+            lng = []
+            sic = []
+            for s in self:
+                lng.append(s.getLon())
+                lat.append(s.getLat())
+                sic.append(s.getSic())
+                #print s.getLat(), s.getLon(), s.getSic()                 
+                
+            lng = np.array(lng)
+            lat = np.array(lat)
+            sic = np.array(sic)
+            
+            #plt.figure()
+            x1,y1= ms(lng, lat) 
+            #ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
+            ms.scatter(x1, y1, c=sic, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
+            
+            ms.drawcoastlines()
+            ms.fillcontinents(lake_color='green')
+            ms.drawparallels(np.arange(-80.,81.,20.))
+            ms.drawmeridians(np.arange(-180.,181.,20.))
+            ms.drawmapboundary(fill_color='white')
+            ms.colorbar(location="right",label="SIC") # draw colorbar            
+            
+            #plt.title("Sea Ice south Concentration")
+            fig = plt.gcf()
+            #plt.show()
+            f_name = filename + "S.png"
+            
+            #mal solo sirve para linux
+            fig.savefig(folder+"/"+f_name)
+            
+            plt.close()
+            
+            
+            del ms
+
+            del lng    
+            del lat    
+            del sic    
+            del x1
+            del y1
+            
+            return f_name
+    
+    
+            
             
     def saveImageHkNPole(self, folder, filename):
         
@@ -212,8 +265,8 @@ class MeasureList(list):
             
             #plt.figure()
             x1,y1= ms(lng, lat) 
-            ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
-            
+            #ms.hexbin(x1,y1, C=sic, gridsize=len(sic), cmap=plt.cm.jet)
+            ms.scatter(x1, y1, c=sic, s=20 , marker='o', cmap=plt.cm.jet, alpha=1, linewidth=1)
             ms.drawcoastlines()
             ms.fillcontinents(lake_color='green')
             ms.drawparallels(np.arange(-80.,81.,20.))
@@ -224,7 +277,7 @@ class MeasureList(list):
             #plt.title("Sea Ice south Concentration")
             fig = plt.gcf()
             #plt.show()
-            f_name = filename + "S.png"
+            f_name = filename + "N.png"
             
             #mal solo sirve para linux
             fig.savefig(folder+"/"+f_name)

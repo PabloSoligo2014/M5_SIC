@@ -71,21 +71,28 @@ class hd5fileManager():
         f.flush()
         f.close()
         
-        #Hacer igual para el polo sur...
-        imgfilename = self._measurelist.saveImageHkNPole(self._folder, self._filename)
+        
+        imgfilenamenorth = self._measurelist.saveImageHkNPole(self._folder, self._filename)
+        imgfilenamesouth = self._measurelist.saveImageHkSPole(self._folder, self._filename)
         
         #print "archivos tar", self._folder+self._filename, self._folder+imgfilename 
         tar = tarfile.open(self._folder+self._filename+".tar.gz", "w:gz")
         
         #print "arcnames", imgfilename, self._filename
         
-        if imgfilename!=None:
-            tar.add(self._folder+imgfilename, arcname=imgfilename)  
+        if imgfilenamenorth!=None:
+            tar.add(self._folder+imgfilenamenorth, arcname=imgfilenamenorth)  
+            
+        if imgfilenamesouth!=None:
+            tar.add(self._folder+imgfilenamesouth, arcname=imgfilenamesouth)  
+            
+            
+            
         tar.add(self._folder+self._filename, arcname=self._filename)    
         tar.close()
         
         if deletefiles==True:
             os.remove(self._folder+self._filename)
-            os.remove(self._folder+imgfilename)
-                
+            os.remove(self._folder+imgfilenamenorth)
+            os.remove(self._folder+imgfilenamesouth)    
         

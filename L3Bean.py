@@ -43,6 +43,9 @@ class L3Bean:
     def isNorth(self):
         return (self._lat>0)
         
+    def getGG(self):
+        return self._gg
+        
     #def __eq__(self, other):
     #    return self._gg == other.getGG()
     
