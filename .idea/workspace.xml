@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="58cc5cb4-8f7d-49e9-9dad-85709ec08566" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aux_CompleteFolder.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HD5FileList.py" afterPath="$PROJECT_DIR$/HD5FileList.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/L3Bean.py" afterPath="$PROJECT_DIR$/L3Bean.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/MeasureList.py" afterPath="$PROJECT_DIR$/MeasureList.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dgdp.txt" afterPath="$PROJECT_DIR$/dgdp.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hd5fileManager.py" afterPath="$PROJECT_DIR$/hd5fileManager.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_l2_processor.py" afterPath="$PROJECT_DIR$/mwr_l2_processor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_sic_calibration.py" afterPath="$PROJECT_DIR$/mwr_sic_calibration.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mwr_tie_points_finder.py" afterPath="$PROJECT_DIR$/mwr_tie_points_finder.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <ignored path="M5_SIC.iws" />
     <ignored path=".idea/workspace.xml" />
