@@ -92,7 +92,11 @@ class hd5fileManager():
         tar.close()
         
         if deletefiles==True:
+            print "Borrando..", self._folder+self._filename
             os.remove(self._folder+self._filename)
+            print "Borrando..", self._folder+imgfilenamenorth
+            
             os.remove(self._folder+imgfilenamenorth)
+            print "Borrando..", self._folder+imgfilenamesouth
             os.remove(self._folder+imgfilenamesouth)    
         

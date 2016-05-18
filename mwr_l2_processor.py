@@ -495,8 +495,7 @@ if __name__ == "__main__":
                     l1b_file = fs  
                     print "procesando...", l1b_file
                     print l1b_file
-                    
-                   
+                  
                     #Surface -1 unknow, 0=land 1=ocean 2=coast 3=near coast 4=ice 5=possible Ice
                     pf = passfile(l1b_file, [1,3,5])
                     mlist, beandic = processPassFile(pf)
@@ -504,7 +503,7 @@ if __name__ == "__main__":
                     l2fn = l1fn.replace("L1B", "L2B")
                     h5f = hd5fileManager("./output/", l2fn ,mlist, beandic)
                     #Con true elimina los archivos ya comprimidos
-                    h5f.save(False)
+                    h5f.save(True)
                     
                     
         else:

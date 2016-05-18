@@ -60,7 +60,7 @@ if __name__ == "__main__":
     fm.drawWholeNorthMap(True, "./p3output/")
     
     #EOyyyymmddL3
-    filename = "./p3output/"+"EO"+firstFileName[2:11]+".h5"
+    filename = "./p3output/"+"EO"+firstFileName[2:11]+"L3.h5"
    
     fm.saveH5L3(filename)
     
